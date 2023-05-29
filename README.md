@@ -26,4 +26,17 @@ Se realiza un análisis de la complejidad en notación Big O de los métodos del
 
 ## Tabla comparativa de Blockchain con índices vs sin índices
 
-Se presenta una tabla comparativa que muestra las diferencias entre el uso de índices y la falta de ellos en el contexto del Blockchain. Se pueden incluir métricas relevantes, como el tiempo de acceso y la eficiencia de almacenamiento. individuales y la colaboración en equipo.
+Se presenta una tabla comparativa que muestra las diferencias entre el uso de índices y la falta de ellos en el contexto del Blockchain. Se pueden incluir métricas relevantes, como el tiempo de acceso y la eficiencia de almacenamiento.
+
+## Conclusiones
+
+En esta sección, se presentan las conclusiones clave del estudio realizado, resumiendo los resultados obtenidos y destacando los puntos más relevantes relacionados con el uso del Blockchain en el dominio de datos elegido.
+
+## Referencias bibliográficas
+
+Se incluye una lista de las referencias bibliográficas utilizadas durante el proceso de investigación y elaboración del informe.
+
+## Actividades concluidas por cada integrante del grupo
+
+Se anexa al informe la lista de actividades concluidas por cada integrante del grupo, lo cual permite evidenciar las contribuciones individuales y la colaboración en equipo.
+
