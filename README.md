@@ -19,3 +19,11 @@ En esta sección, se brinda una explicación detallada de la estructura de datos
 ## Estructuras de datos utilizadas en la aplicación
 
 Se proporciona una explicación de cada una de las estructuras de datos utilizadas en la aplicación, de acuerdo con los criterios de búsqueda establecidos. Se recomienda utilizar diagramas para una mejor claridad y comprensión.
+
+## Análisis de la complejidad en notación Big O
+
+Se realiza un análisis de la complejidad en notación Big O de los métodos del Blockchain, centrándose principalmente en los métodos de inserción y búsqueda. Se pueden incluir ejemplos y gráficos para ilustrar los resultados obtenidos.
+
+## Tabla comparativa de Blockchain con índices vs sin índices
+
+Se presenta una tabla comparativa que muestra las diferencias entre el uso de índices y la falta de ellos en el contexto del Blockchain. Se pueden incluir métricas relevantes, como el tiempo de acceso y la eficiencia de almacenamiento. individuales y la colaboración en equipo.
