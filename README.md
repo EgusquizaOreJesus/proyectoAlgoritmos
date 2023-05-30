@@ -14,7 +14,15 @@ En resumen, este proyecto busca aprovechar las capacidades del Blockchain y las 
 
 ## Descripción del caso de estudio
 
-Aquí se describe en detalle el caso de estudio planteado por el grupo, explicando su relevancia y los aspectos clave que se abordaron durante el proyecto.
+En este proyecto, nuestro enfoque principal es desarrollar una aplicación transaccional basada en la tecnología del Blockchain, con un enfoque específico en las transacciones de Bitcoin. Nuestro objetivo es crear una plataforma segura y confiable para el registro y la gestión de estas transacciones, garantizando la integridad y la seguridad de los datos en un contexto donde el uso de criptomonedas continúa creciendo.
+
+Nuestra aplicación permitirá a los usuarios registrar transacciones de Bitcoin de forma segura, transparente y eficiente. Utilizaremos la tecnología del Blockchain para mantener un historial completo y verificable de todas las operaciones, manteniendo un registro ordenado cronológicamente.
+
+Además, implementaremos estructuras de indexación avanzadas, como el B-Tree y el Hash, para mejorar el rendimiento y la eficiencia en la búsqueda de transacciones específicas. Esto facilitará a los usuarios encontrar y analizar rápidamente la información relevante de las transacciones de Bitcoin.
+
+Para asegurar la integridad de los bloques de transacciones, implementaremos un mecanismo de "proof of work". Esto garantizará que cualquier alteración en un bloque requiera un esfuerzo computacional significativo, añadiendo una capa adicional de seguridad a nuestras transacciones de Bitcoin.
+
+En resumen, nuestro caso de estudio se centra en desarrollar una aplicación transaccional basada en Blockchain para la gestión de las transacciones de Bitcoin. Aprovecharemos las ventajas del Blockchain, junto con estructuras de indexación avanzadas y un mecanismo de "proof of work", para ofrecer una solución confiable, eficiente y segura en la gestión de operaciones con criptomonedas.
 
 ## Importancia del Blockchain en el dominio de datos elegido
 
