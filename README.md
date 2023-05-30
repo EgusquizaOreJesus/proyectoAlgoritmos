@@ -54,5 +54,19 @@ Se incluye una lista de las referencias bibliográficas utilizadas durante el pr
 
 ## Actividades concluidas por cada integrante del grupo
 
-Se anexa al informe la lista de actividades concluidas por cada integrante del grupo, lo cual permite evidenciar las contribuciones individuales y la colaboración en equipo.
+En este apartado, se presenta una lista detallada de las actividades concluidas por cada integrante del grupo, lo cual permite destacar las contribuciones individuales y resaltar el trabajo en equipo.
+
+A continuación, se muestra un resumen de las actividades realizadas por cada miembro del grupo:
+
+| Integrantes del Grupo          | Actividades Realizadas               |
+|--------------------------------|--------------------------------------|
+| Fabricio, Jesús, Ximena y Edgar| Investigación y estudio de problemas |
+| Fabricio, Jesús, Ximena y Edgar| Diseño y desarrollo de algoritmos    |
+| Fabricio y Jesús               | Programación y desarrollo de software| 
+| Fabricio, Jesús, Ximena y Edgar| Análisis de datos y modelado         |
+| Fabricio, Jesús, Ximena y Edgar| Diseño de sistemas y arquitectura    |
+| Ximena y Edgar                 | Documentación y presentación         |
+| Fabricio y Jesús               | Pruebas y evaluación                 |
+
+
 
