@@ -33,6 +33,7 @@ struct Node {
         while (i < count && start > keys[i])
             ++i;
 
+
         if (leaf) {
             while (i < count && keys[i] <= end) {
                 result.push_back(keys[i]);
@@ -51,6 +52,7 @@ struct Node {
     vector<TK> range_search(TK begin, TK end) {
         vector<TK> result;
         range_2(begin, end, result);
+
         return result;
     }
 

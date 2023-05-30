@@ -9,6 +9,23 @@
 #include "ForwardList.h"
 #include "ChainHash.h"
 #include "transaccion.h"
+int mine( int nonce, const string& data , string challenge)
+{
+    string hashcode= sha256(data +to_string(nonce));
+    int size = challenge.size();
+    while (true)
+    {
+        hashcode= sha256(data +to_string(nonce));
+        nonce++;
+        if(hashcode.substr(0, size)==challenge)
+            break;
+
+    }
+    //cout<<hashcode<<endl;
+    return nonce;
+
+}
+
 struct block{
     int id;
     string data;
@@ -16,8 +33,9 @@ struct block{
     string  prev_hash;
     string  current_hash;
     int nonce;
+    string signature_string="0000";
     block(){}
-    block(int previd , const vector<transaccion>& datos, const string& previo){
+    explicit block(int previd , const vector<transaccion>& datos, const string& previo){
         string algo=string (64, '0');
         prev_hash=(previd==0)?(algo):(previo);
         id=++previd;
@@ -25,9 +43,20 @@ struct block{
             data += e.emisor +","+ e.receptor +","+ to_string(e.monto) +","+ to_string(e.fechatransaccion.dia) +","+  to_string(e.fechatransaccion.mes) + ","+ to_string(e.fechatransaccion.anio) + "\n";
         }
         data2=datos;
-        nonce= mine(0,data+prev_hash)-1;
+        nonce= mine(0,data+prev_hash,signature_string)-1;
         current_hash= sha256(data+prev_hash+ to_string(nonce));
 
+    }
+    block(const block& copy)
+    {
+        this->id=copy.id;
+        data=copy.data;
+        for (auto v:copy.data2) {
+            this->data2.push_back(v);
+        }
+        prev_hash=copy.prev_hash;
+        current_hash=copy.current_hash;
+        nonce=copy.nonce;
     }
     void re_data(){
         data.clear();
@@ -37,7 +66,7 @@ struct block{
     }
     void self_hash()
     {
-        nonce= mine(0,data+prev_hash)-1;
+        nonce= mine(0,data+prev_hash,signature_string)-1;
         current_hash= sha256(data+prev_hash+ to_string(nonce));
     }
 
@@ -62,21 +91,8 @@ struct block{
             }
         }
     }
-    int mine( int nonce, const string& data )
-    {
-        string hashcode= sha256(data +to_string(nonce));
-        while (true)
-        {
-            hashcode= sha256(data +to_string(nonce));
-            nonce++;
-            if(hashcode.substr(0, 3)=="000")
-                break;
 
-        }
-        //cout<<hashcode<<endl;
-        return nonce;
 
-    }
 
     void printblock(){
         cout<<"ID :"<<id<<endl;
@@ -98,19 +114,38 @@ private:
     ChainHash<int,block*> block_references;
 
 public:
-    explicit blockchain(const vector<transaccion>& data){
+     blockchain(const vector<transaccion>& data){
         id=1;
         auto* new_block= new block(0,data,"");
         block_references.insert(make_pair(new_block->id,new_block));
     }
+    blockchain(const blockchain& other) {
+        // cout<<"USANDO CONSTRUCT COPIA"<<endl;
+        id = other.id;
 
-    void insert_block(const vector<transaccion>& data){
+        for (int i = 1; i <= id; ++i) {
+            auto nuevo= other.block_references[i];
+            auto* block_copy = new block(*nuevo);
+            block_references.insert(make_pair(block_copy->id, block_copy));
+        }
+    }
+    void insert_block_with_transaction(const vector<transaccion>& data){
         //block * current_block = blockchain_.front();
         block * current_block=block_references[id++];
         auto * new_block =new block(current_block->id ,data , current_block->current_hash);
         block_references.insert(make_pair(new_block->id,new_block));
         //blockchain_.push_front(new_block);
     }
+    void insert_block(block * new_block2){
+        //block * current_block = blockchain_.front();
+        block * current_block=block_references[id++];
+        new_block2 =new block(current_block->id ,current_block->data2 , current_block->current_hash);
+       block_references.insert(make_pair(id,new_block2));
+
+
+
+    }
+
     void view_blockChain(){
         for (int i = 1; i <= id; ++i)
             block_references[i]->printblock();
@@ -132,18 +167,22 @@ public:
     {
         return block_references[id]->current_hash;
     }
-    void find_block(int index){
+    auto find_block(int index){
 
         if(!block_references.contains(index))
         {
             cout<<"Block not found ...";
+
         } else {
 
             block_references[index]->printblock();
+            return block_references[index];
         }
 
     }
-
+    int getLastBlockId(){
+        return id;
+    }
 
 };
 #endif //PROYECTOALGORITMOS_BLOCKCHAIN_H

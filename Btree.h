@@ -41,6 +41,7 @@ public:
 
     TK minKey(){return minKey(this->root);};  // minimo valor de la llave en el arbol
     TK maxKey(){return maxKey(this->root);};  // maximo valor de la llave en el arbol
+
     vector<TK> range_searching(TK lb , TK ub);
     void clear(){this->root->killSelf(); this->root = nullptr; n = 0;}; // eliminar todos lo elementos del arbol
     int size(){return n;}; // retorna el total de elementos insertados
@@ -512,9 +513,9 @@ Node<TK> *BTree<TK>::getRoot() const {
     return root;
 }
 
+
 template<typename TK>
-vector<TK> BTree<TK>::range_searching(TK lb, TK ub) {
+vector<TK> BTree<TK>::range_searching(TK lb , TK ub) {
     return root->range_search(lb,ub);
 }
-
 #endif //PROYECTOALGORITMOS_BTREE_H

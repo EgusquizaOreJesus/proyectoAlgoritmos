@@ -37,7 +37,7 @@ public:
         int index =  hashcode % capacity;
 
     }
-    bool contains (TK key){
+    bool contains  (TK key) const {
 
         size_t hashcode = hasher(key);
         int index =  hashcode % capacity;
@@ -66,7 +66,7 @@ public:
 
     }
 
-    TV& operator[](TK key)
+    TV& operator[](TK key) const
     {
         size_t hashcode = hasher(key);
         int index =  hashcode % capacity;
