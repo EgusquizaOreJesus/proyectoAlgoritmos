@@ -2,7 +2,15 @@
 
 ## Introducción
 
-En esta sección, se proporciona una introducción al informe, presentando el objetivo y el contexto del estudio realizado por el grupo.
+En la actualidad, la necesidad de garantizar la seguridad y la integridad de los datos ha impulsado el desarrollo de tecnologías innovadoras en busca de soluciones confiables y eficientes. Entre estas soluciones revolucionarias destaca el Blockchain. Con el paso del tiempo, esta tecnología ha ganado una gran popularidad al ofrecer una forma segura y confiable de almacenar y gestionar datos.
+
+En el marco de este proyecto, nos enfocaremos en la creación de una aplicación transaccional de interacción de datos basada en un Blockchain implementado en un solo host. Para fortalecer la seguridad y mejorar el rendimiento de la aplicación, utilizaremos estructuras de indexación como B-Tree y Hash.
+
+El Blockchain, inicialmente conocido por ser la base de las criptomonedas, ha evolucionado y se ha convertido en una tecnología versátil y confiable para garantizar la integridad de la información. En este proyecto, aprovecharemos su capacidad para almacenar transacciones de manera segura y transparente, combinándola con estructuras de indexación avanzadas como B-Tree y Hash. Esta combinación nos permitirá mejorar la eficiencia y la velocidad de acceso a los datos, brindando una solución robusta y confiable para la gestión de datos transaccionales.
+
+Nuestra aplicación transaccional no solo ofrecerá seguridad y confiabilidad, sino que también permitirá a los usuarios interactuar de manera rápida y segura con los datos. Además, la implementación de un mecanismo de "proof of work" garantizará la integridad y la confiabilidad de cada transacción realizada en la aplicación.
+
+En resumen, este proyecto busca aprovechar las capacidades del Blockchain y las estructuras de indexación avanzadas para desarrollar una aplicación transaccional de alta calidad. A través de esta solución innovadora, esperamos brindar a los usuarios una experiencia óptima al interactuar con los datos, asegurando su integridad y confiabilidad en todo momento.
 
 ## Descripción del caso de estudio
 
