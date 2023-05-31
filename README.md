@@ -18,7 +18,7 @@ En el marco de este proyecto, nos enfocaremos en la creación de una aplicación
 
 El Blockchain, inicialmente conocido por ser la base de las criptomonedas, ha evolucionado y se ha convertido en una tecnología versátil y confiable para garantizar la integridad de la información. En este proyecto, aprovecharemos su capacidad para almacenar transacciones de manera segura y transparente, combinándola con estructuras de indexación avanzadas como B-Tree y Hash. Esta combinación nos permitirá mejorar la eficiencia y la velocidad de acceso a los datos, brindando una solución robusta y confiable para la gestión de datos transaccionales.
 
-Nuestra aplicación transaccional no solo ofrecerá seguridad y confiabilidad, sino que también permitirá a los usuarios interactuar de manera rápida y segura con los datos. Además, la implementación de un mecanismo de "proof of work" garantizará la integridad y la confiabilidad de cada transacción realizada en la aplicación.
+Nuestra aplicación transaccional no solo ofrecerá seguridad y confiabilidad, sino que también permitirá a los usuarios interactuar de manera rápida y segura con los datos.
 
 En resumen, este proyecto busca aprovechar las capacidades del Blockchain y las estructuras de indexación avanzadas para desarrollar una aplicación transaccional de alta calidad. A través de esta solución innovadora, esperamos brindar a los usuarios una experiencia óptima al interactuar con los datos, asegurando su integridad y confiabilidad en todo momento.
 
@@ -30,9 +30,7 @@ Nuestra aplicación permitirá a los usuarios registrar transacciones de Bitcoin
 
 Además, implementaremos estructuras de indexación avanzadas, como el B-Tree y el Hash, para mejorar el rendimiento y la eficiencia en la búsqueda de transacciones específicas. Esto facilitará a los usuarios encontrar y analizar rápidamente la información relevante de las transacciones de Bitcoin.
 
-Para asegurar la integridad de los bloques de transacciones, implementaremos un mecanismo de "proof of work". Esto garantizará que cualquier alteración en un bloque requiera un esfuerzo computacional significativo, añadiendo una capa adicional de seguridad a nuestras transacciones de Bitcoin.
-
-En resumen, nuestro caso de estudio se centra en desarrollar una aplicación transaccional basada en Blockchain para la gestión de las transacciones de Bitcoin. Aprovecharemos las ventajas del Blockchain, junto con estructuras de indexación avanzadas y un mecanismo de "proof of work", para ofrecer una solución confiable, eficiente y segura en la gestión de operaciones con criptomonedas.
+En resumen, nuestro caso de estudio se centra en desarrollar una aplicación transaccional basada en Blockchain para la gestión de las transacciones de Bitcoin. Aprovecharemos las ventajas del Blockchain, junto con estructuras de indexación avanzadas, para ofrecer una solución confiable, eficiente y segura en la gestión de operaciones con criptomonedas.
 
 ## Importancia del Blockchain en el dominio de datos elegido
 
