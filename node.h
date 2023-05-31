@@ -48,6 +48,32 @@ struct Node {
             children[i]->range_2(start, end, result);
         }
     }
+    void range_2(string start, string end, vector<TK>& result) {
+        int i = 0;
+        while (i < count && start > keys[i])
+            ++i;
+
+
+        if (leaf) {
+            while (i < count && keys[i] <= end) {
+                result.push_back(keys[i]);
+                ++i;
+            }
+        } else {
+            while (i < count && keys[i] <= end) {
+                children[i]->range_2(start, end, result);
+                result.push_back(keys[i]);
+                ++i;
+            }
+            children[i]->range_2(start, end, result);
+        }
+    }
+    vector<TK> range_search(string begin, string end) {
+        vector<TK> result;
+        range_2(begin, end, result);
+
+        return result;
+    }
 
     vector<TK> range_search(TK begin, TK end) {
         vector<TK> result;

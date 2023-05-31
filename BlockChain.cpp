@@ -38,7 +38,6 @@ int main() {
     alfa.insert_block_with_transaction(trans4);
 
 
-
     User_net peers(alfa,4);
     alfa.view_blockChain();
     peers.view_shared_block();
@@ -52,5 +51,19 @@ int main() {
     cout<<"------------------------------PROOF OF WORK TO ADD BLOCK------------------------------"<<endl;
     peers.addBlock(transM);
     peers.view_shared_block();
+
+    BTree<transaccion> alfa2(3);
+    alfa2.insert(a);
+    alfa2.insert(b);
+    alfa2.insert(c);
+    alfa2.insert(d);
+    alfa2.insert(e);
+    alfa2.insert(f);
+    alfa2.insert(g);
+    auto v = alfa2.range_searching("02/10/2021","21/10/2022");
+    cout << "tamano: "<< v.size() << endl;
+    for(const auto& x:v){
+        cout << "emisor: " <<x.emisor << endl;
+    }
     return 0;
 }
