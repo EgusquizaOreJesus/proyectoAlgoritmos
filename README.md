@@ -63,7 +63,15 @@ Se están utilizando tres estructuras de datos con el objetivo de almacenar info
 
 ## Análisis de la complejidad en notación Big O
 
-Se realiza un análisis de la complejidad en notación Big O de los métodos del Blockchain, centrándose principalmente en los métodos de inserción y búsqueda. Se pueden incluir ejemplos y gráficos para ilustrar los resultados obtenidos.
+| Método                  | Complejidad |
+|-------------------------|-------------|
+| Buscar bloque (id)      | O(1)        |
+| Buscar fecha            | O(log(n))   |
+| Buscar por rango de fechas | O(log(n)) |
+| Insertar Bloque         | O(log(n))   |
+| Buscar usuario          | O(1)        |
+| Buscar transacción      | O(1)        |
+
 
 ## Tabla comparativa de Blockchain con índices vs sin índices
 
