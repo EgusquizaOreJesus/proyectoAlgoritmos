@@ -63,6 +63,8 @@ Se están utilizando tres estructuras de datos con el objetivo de almacenar info
 
 ## Análisis de la complejidad en notación Big O
 
+En este análisis, nos centramos en los métodos de inserción y búsqueda en el Blockchain. A continuación, se presenta una tabla que muestra la complejidad de cada método:
+
 | Método                  | Complejidad |
 |-------------------------|-------------|
 | Buscar bloque (id)      | O(1)        |
@@ -72,6 +74,17 @@ Se están utilizando tres estructuras de datos con el objetivo de almacenar info
 | Buscar usuario          | O(1)        |
 | Buscar transacción      | O(1)        |
 
+Del análisis de la tabla, podemos destacar lo siguiente:
+
+- La búsqueda de un bloque por su identificador tiene una complejidad constante O(1), lo que significa que el tiempo necesario para encontrar un bloque no depende del tamaño del Blockchain.
+
+- Tanto la búsqueda por fecha como la búsqueda por rango de fechas tienen una complejidad logarítmica O(log(n)), donde "n" representa el número de bloques en el Blockchain. Esto implica que el tiempo de búsqueda aumenta de forma logarítmica a medida que se incrementa el tamaño del Blockchain.
+
+- La inserción de un bloque también tiene una complejidad logarítmica O(log(n)). Al igual que las búsquedas, el tiempo necesario para insertar un bloque aumenta de forma logarítmica a medida que se incrementa el tamaño del Blockchain.
+
+- Por otro lado, tanto la búsqueda de un usuario como la búsqueda de una transacción tienen una complejidad constante O(1), lo que significa que el tiempo necesario para realizar estas operaciones no depende del tamaño del Blockchain.
+
+El análisis de la complejidad en notación Big O nos proporciona una comprensión del rendimiento de los métodos del Blockchain en función del tamaño de los datos. Con esta información, podemos tomar decisiones informadas sobre la eficiencia y escalabilidad de nuestra aplicación transaccional basada en Blockchain.
 
 ## Tabla comparativa de Blockchain con índices vs sin índices
 
@@ -88,15 +101,18 @@ Se están utilizando tres estructuras de datos con el objetivo de almacenar info
 
 ## Conclusiones
 
-En esta sección, se presentan las conclusiones clave del estudio realizado, resumiendo los resultados obtenidos y destacando los puntos más relevantes relacionados con el uso del Blockchain en el dominio de datos elegido.
-
 Hemos aprendido que la construcción de un blockchain puede realizarse mediante el uso de una lista enlazada. Sin embargo, también hemos comprendido que, para lograr consultas más eficientes y específicas, es esencial incorporar estructuras de datos adicionales, como el hash o el árbol B.
 
 La implementación adecuada de estas estructuras de datos nos permite optimizar el rendimiento de nuestro software, evitando ineficiencias y mejorando la usabilidad del sistema en su conjunto. Con conocimientos sólidos sobre cómo estructurar la información y hacer uso eficiente de las estructuras de datos, podemos alcanzar resultados notables y aprovechar al máximo las capacidades de la computación.
 
 ## Referencias bibliográficas
 
-Se incluye una lista de las referencias bibliográficas utilizadas durante el proceso de investigación y elaboración del informe.
+A continuación se presenta una lista de las referencias bibliográficas utilizadas durante el proceso de investigación y elaboración del informe:
+
+1. [SHA-256 C++ Implementation](https://www.delftstack.com/howto/cpp/sha256-cpp/)
+2. [Blockchain - How Does It Work?](https://andersbrownworth.com/blockchain/)
+3. [B-Tree Visualization](https://www.cs.usfca.edu/~galles/visualization/BTree.html)
+
 
 ## Actividades concluidas por cada integrante del grupo
 
