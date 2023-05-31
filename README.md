@@ -1,5 +1,15 @@
 # Informe
 
+## Integrantes
+
+| Nombres y Apellidos                     |
+|------------------------------|
+| Fabricio Chávez Balarezo     |
+| Ximena Nicolle Lindo Peña    |
+| Jesús Miguel Egúsquiza Oré   |
+| Edgar Moisés Chambilla Mamani|
+
+
 ## Introducción
 
 En la actualidad, la necesidad de garantizar la seguridad y la integridad de los datos ha impulsado el desarrollo de tecnologías innovadoras en busca de soluciones confiables y eficientes. Entre estas soluciones revolucionarias destaca el Blockchain. Con el paso del tiempo, esta tecnología ha ganado una gran popularidad al ofrecer una forma segura y confiable de almacenar y gestionar datos.
