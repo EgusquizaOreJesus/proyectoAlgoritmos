@@ -26,15 +26,40 @@ En resumen, nuestro caso de estudio se centra en desarrollar una aplicación tra
 
 ## Importancia del Blockchain en el dominio de datos elegido
 
-Se explica la importancia del uso de la tecnología Blockchain en el dominio de datos seleccionado, destacando sus beneficios y posibles aplicaciones.
+El blockchain es una tecnología revolucionaria que brinda una amplia gama de beneficios, incluyendo seguridad, transparencia y confiabilidad en el registro y verificación de transacciones digitales. Su capacidad para garantizar la inmutabilidad de los datos y resistir modificaciones lo convierte en una herramienta invaluable en diversos campos, abarcando más allá del ámbito financiero.
+
+En el contexto específico de nuestro proyecto, estamos utilizando el blockchain en el ámbito financiero para registrar y gestionar datos relacionados con las transacciones de los usuarios. Estos datos incluyen información crucial como el monto de las transacciones, el tipo de transacción y la fecha en que se realizaron. Al emplear la tecnología blockchain, estamos facilitando el intercambio de montos digitales, permitiendo la creación de carteras digitales y asegurando un registro exhaustivo de todas las actividades realizadas por los usuarios en fechas específicas.
+
+Esta implementación del blockchain en el ámbito financiero nos brinda una plataforma segura y confiable para llevar a cabo operaciones financieras digitales. Además, nos proporciona un nivel de transparencia y trazabilidad sin precedentes, lo que resulta crucial en la era de la digitalización y la creciente necesidad de confianza en las transacciones realizadas en línea. Con el blockchain, podemos garantizar que cada transacción realizada sea registrada de manera precisa, segura y verificable, estableciendo así una base sólida para el éxito y la confianza en nuestro proyecto financiero.
 
 ## Estructura de datos del Blockchain y estrategia de integridad
 
-En esta sección, se brinda una explicación detallada de la estructura de datos utilizada en el Blockchain, junto con la estrategia empleada para garantizar la integridad de su contenido. También se describe cómo se implementó el mecanismo de prueba de trabajo (proof of work).
+El Blockchain, como una estructura de datos descentralizada y distribuida, presenta una cadena de bloques enlazados mediante referencias criptográficas. Cada bloque contiene un conjunto de transacciones y un hash único que identifica al bloque anterior. Esta característica fundamental crea una cadena inmutable, donde cualquier alteración en un bloque afecta a todos los bloques siguientes.
+
+En nuestro caso, hemos implementado una estructura de datos de Blockchain en un solo host, aprovechando las ventajas de las estructuras B-Tree y Hash. El B-Tree se utiliza para organizar eficientemente las transacciones, permitiendo una búsqueda y recuperación rápidas. Por otro lado, el Hash se emplea para calcular una representación criptográfica única de cada bloque, garantizando así la integridad de su contenido.
+
+Al emplear estas sólidas estructuras de datos, nuestra aplicación transaccional garantiza la seguridad y la confiabilidad en el registro y la gestión de las transacciones de Bitcoin. La combinación del Blockchain, el B-Tree, el Hash y el mecanismo de prueba de trabajo crea una solución robusta y resistente a manipulaciones. Asimismo, es importante destacar que existen otros pares en la red que tienen una copia exacta del Blockchain, lo que permite realizar comparaciones y detectar cualquier cambio no autorizado.
+
+En resumen, nuestra aplicación transaccional se basa en una estructura de datos de Blockchain, potenciada por el uso eficiente del B-Tree y el Hash. Esta combinación garantiza la seguridad y la integridad de las transacciones de Bitcoin, proporcionando un entorno confiable para interactuar con los datos de manera segura y confiable.
 
 ## Estructuras de datos utilizadas en la aplicación
 
-Se proporciona una explicación de cada una de las estructuras de datos utilizadas en la aplicación, de acuerdo con los criterios de búsqueda establecidos. Se recomienda utilizar diagramas para una mejor claridad y comprensión.
+Se están utilizando tres estructuras de datos con el objetivo de almacenar información y realizar consultas eficientes sobre las transacciones. Estas estructuras son fundamentales para garantizar un almacenamiento organizado y un acceso rápido a los datos transaccionales.
+
+![Ejemplo de imagen](https://media.discordapp.net/attachments/996002132891271188/1113317306651660368/image.png?width=1025&height=316)
+
+1. **Hash:**
+   - Indexamos al usuario y a la transacción.
+   - Objetivo: Acceder rápidamente al linked list correspondiente.
+
+2. **LinkedList:**
+   - Indexamos las transacciones con información como el ID, emisor, receptor, monto y fecha.
+   - Objetivo: Almacenar la información de la transacción con la indexación de hash.
+
+3. **Btree:**
+   - Indexamos las transacciones por fecha.
+   - Utilizado para realizar búsquedas por rango entre fechas A y B.
+   - Objetivo: Poder realizar consultas de tipo fecha eficientemente.
 
 ## Análisis de la complejidad en notación Big O
 
@@ -42,11 +67,24 @@ Se realiza un análisis de la complejidad en notación Big O de los métodos del
 
 ## Tabla comparativa de Blockchain con índices vs sin índices
 
-Se presenta una tabla comparativa que muestra las diferencias entre el uso de índices y la falta de ellos en el contexto del Blockchain. Se pueden incluir métricas relevantes, como el tiempo de acceso y la eficiencia de almacenamiento.
+|                     | Con índices | Sin índices |
+|---------------------|-------------|-------------|
+| Buscar bloque (id)  | O(1)        | O(n)        |
+| Buscar fecha        | O(log(n))   | O(n*k)      |
+|                     |             | Siendo “k” la media de número de transacciones en un blockchain. |
+| Buscar por rango de fechas | O(log(n)) | O(n) |
+| Insertar bloque     | O(log(n))   | O(1)        |
+| Buscar usuario      | O(1)        | O(n)        |
+| Buscar transacción  | O(1)        | O(n)        |
+
 
 ## Conclusiones
 
 En esta sección, se presentan las conclusiones clave del estudio realizado, resumiendo los resultados obtenidos y destacando los puntos más relevantes relacionados con el uso del Blockchain en el dominio de datos elegido.
+
+Hemos aprendido que la construcción de un blockchain puede realizarse mediante el uso de una lista enlazada. Sin embargo, también hemos comprendido que, para lograr consultas más eficientes y específicas, es esencial incorporar estructuras de datos adicionales, como el hash o el árbol B.
+
+La implementación adecuada de estas estructuras de datos nos permite optimizar el rendimiento de nuestro software, evitando ineficiencias y mejorando la usabilidad del sistema en su conjunto. Con conocimientos sólidos sobre cómo estructurar la información y hacer uso eficiente de las estructuras de datos, podemos alcanzar resultados notables y aprovechar al máximo las capacidades de la computación.
 
 ## Referencias bibliográficas
 
