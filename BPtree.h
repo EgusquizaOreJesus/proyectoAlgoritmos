@@ -1,9 +1,6 @@
 // Deletion operation on a B+ tree in C++
 
-#include <climits>
-#include <fstream>
 #include <iostream>
-#include <sstream>
 #include "stack"
 using namespace std;
 int MAX_SIZE = 3;
