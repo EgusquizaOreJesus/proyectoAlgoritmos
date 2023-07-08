@@ -28,39 +28,20 @@ struct Node {
         this->count = 0;
         this->leaf = _leaf;
     }
-    void range_2(TK start, TK end, vector<TK>& result) {
+    template<typename T>
+    void range_2(T start, T end, vector<TK>& result) {
         int i = 0;
-        while (i < count && start > keys[i])
+        while (i < count && comparador::isMenor(start,keys[i]))
             ++i;
 
 
         if (leaf) {
-            while (i < count && keys[i] <= end) {
+            while (i < count && comparador::isMenorIgual(end,keys[i])) {
                 result.push_back(keys[i]);
                 ++i;
             }
         } else {
-            while (i < count && keys[i] <= end) {
-                children[i]->range_2(start, end, result);
-                result.push_back(keys[i]);
-                ++i;
-            }
-            children[i]->range_2(start, end, result);
-        }
-    }
-    void range_2(string start, string end, vector<TK>& result) {
-        int i = 0;
-        while (i < count && start > keys[i])
-            ++i;
-
-
-        if (leaf) {
-            while (i < count && keys[i] <= end) {
-                result.push_back(keys[i]);
-                ++i;
-            }
-        } else {
-            while (i < count && keys[i] <= end) {
+            while (i < count && comparador::isMenorIgual(end,keys[i])) {
                 children[i]->range_2(start, end, result);
                 result.push_back(keys[i]);
                 ++i;
@@ -75,7 +56,7 @@ struct Node {
         return result;
     }
 
-    vector<TK> range_search(TK begin, TK end) {
+    vector<TK> range_search(double begin, double end) {
         vector<TK> result;
         range_2(begin, end, result);
 
@@ -85,7 +66,7 @@ struct Node {
     int insert(TK value) {
         int i = this->count - 1;
         for(; i >= 0; i--){
-            if(value > this->keys[i]){
+            if(comparador::isMenor(this->keys[i],value)){
                 break;
             }else{
                 this->keys[i+1] = this->keys[i];

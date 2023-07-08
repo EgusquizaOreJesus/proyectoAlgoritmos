@@ -3,31 +3,40 @@
 #include "iostream"
 #include <ctime>
 
-struct fecha{
+
+
+
+
+
+struct Fecha{
     int dia = int{};
     int mes = int{};
     int anio = int{};
-    fecha(){}
-    fecha(int d,int m,int a):dia(d),mes(m),anio(a){}
-    fecha(const fecha& other){
+    Fecha(){}
+    Fecha(int d, int m, int a): dia(d), mes(m), anio(a){}
+    Fecha(const Fecha& other){
         dia = other.dia;
         mes = other.mes;
         anio = other.anio;
     }
 };
-
+enum eleccion{
+    emisor,
+    receptor,
+    fechaX,
+    monto
+};
 struct transaccion
 {
-
     double monto;
     std::string emisor;
     std::string receptor;
-    fecha fechatransaccion;
+    Fecha fechatransaccion;
     transaccion(){
         monto = double{};
     }
 
-    explicit transaccion(double monto_, std::string e, std::string r, int d,int m, int a):fechatransaccion(d,m,a)
+    explicit transaccion(double monto_, std::string e, std::string r, int d,int m, int a): fechatransaccion(d, m, a)
     {
         monto = monto_;
         emisor = std::move(e);
@@ -54,257 +63,268 @@ struct transaccion
         receptor = other.receptor;
         fechatransaccion = other.fechatransaccion;
     }
-
-    friend bool operator<(const transaccion& other1,const transaccion& other2);
-    friend bool operator<(const string& fecha_,const transaccion& other2);
-    friend bool operator>(const string& fecha_,const transaccion& other2);
-    friend bool operator>=(const string& fecha_,const transaccion& other2);
-    friend bool operator<=(const transaccion &other2,const string& fecha_);
-    friend bool operator<=(const transaccion& other1,const transaccion& other2);
-    friend bool operator>(const transaccion& other1, const transaccion& other2);
-    friend bool operator>=(const transaccion& other1, const transaccion& other2);
-    friend bool operator==(const transaccion& A, const transaccion& B);
-
     friend ostream& operator<<(ostream& os,const transaccion& other1);
 };
-
-bool operator<=(const transaccion &other2,const string& fecha_) {
-    size_t indice_barra_1 = fecha_.find('/');
-    size_t indice_barra_2 = fecha_.rfind('/');
-
-    std::string dia_str = fecha_.substr(0, indice_barra_1);
-    std::string mes_str = fecha_.substr(indice_barra_1 + 1, indice_barra_2 - indice_barra_1 - 1);
-    std::string anio_str = fecha_.substr(indice_barra_2 + 1);
-
-    int dia = std::stoi(dia_str);
-    int mes = std::stoi(mes_str);
-    int anio = std::stoi(anio_str);
-    if (other2.fechatransaccion.anio > anio){
-        return false;
-    }else{
-        if (other2.fechatransaccion.mes > mes){
-            return false;
-        }
-        else if (other2.fechatransaccion.mes < mes){
+struct comparador{
+    static bool igualdad(const transaccion &A, const transaccion &B){
+        if (A.fechatransaccion.anio == B.fechatransaccion.anio && A.fechatransaccion.mes == B.fechatransaccion.mes && A.fechatransaccion.dia == B.fechatransaccion.dia){
             return true;
         }
+        return false;
+    }
+    static bool igualdad(const string& fecha, const transaccion &B){
+        size_t indice_barra_1 = fecha.find('/');
+        size_t indice_barra_2 = fecha.rfind('/');
+
+        std::string dia_str = fecha.substr(0, indice_barra_1);
+        std::string mes_str = fecha.substr(indice_barra_1 + 1, indice_barra_2 - indice_barra_1 - 1);
+        std::string anio_str = fecha.substr(indice_barra_2 + 1);
+
+        int dia = std::stoi(dia_str);
+        int mes = std::stoi(mes_str);
+        int anio = std::stoi(anio_str);
+        if (anio == B.fechatransaccion.anio && mes == B.fechatransaccion.mes && dia == B.fechatransaccion.dia){
+            return true;
+        }
+        return false;
+    }
+    static bool igualdad(const Fecha &A, const transaccion &B){
+
+        if (A.anio == B.fechatransaccion.anio && A.mes == B.fechatransaccion.mes && A.dia == B.fechatransaccion.dia){
+            return true;
+        }
+        return false;
+    }
+    static bool isMayor(const transaccion& other1, const transaccion& other2){
+        if (other1.fechatransaccion.anio < other2.fechatransaccion.anio){
+            return true;
+        }
+        else if (other1.fechatransaccion.anio > other2.fechatransaccion.anio){
+            return false;
+        }
         else{
-            if (other2.fechatransaccion.dia > dia){
-                return false;
+            if (other1.fechatransaccion.mes < other2.fechatransaccion.mes){
+                return true;
             }
-            return true;
-        }
-    }
-}
-
-bool operator>(const string& fecha_, const transaccion &other2) {
-    size_t indice_barra_1 = fecha_.find('/');
-    size_t indice_barra_2 = fecha_.rfind('/');
-
-    std::string dia_str = fecha_.substr(0, indice_barra_1);
-    std::string mes_str = fecha_.substr(indice_barra_1 + 1, indice_barra_2 - indice_barra_1 - 1);
-    std::string anio_str = fecha_.substr(indice_barra_2 + 1);
-
-    int dia = std::stoi(dia_str);
-    int mes = std::stoi(mes_str);
-    int anio = std::stoi(anio_str);
-    if (anio < other2.fechatransaccion.anio){
-        return false;
-    }
-    else if (anio > other2.fechatransaccion.anio){
-        return true;
-    }
-    else{
-        if (mes < other2.fechatransaccion.mes) {
-            return false;
-        }
-        else if (mes > other2.fechatransaccion.mes){
-            return true;
-        }
-        else{
-            if (dia <= other2.fechatransaccion.dia){
-                return false;
-            }
-            return true;
-        }
-    }
-}
-
-bool operator>=(const string& fecha_, const transaccion &other2) {
-    size_t indice_barra_1 = fecha_.find('/');
-    size_t indice_barra_2 = fecha_.rfind('/');
-
-    std::string dia_str = fecha_.substr(0, indice_barra_1);
-    std::string mes_str = fecha_.substr(indice_barra_1 + 1, indice_barra_2 - indice_barra_1 - 1);
-    std::string anio_str = fecha_.substr(indice_barra_2 + 1);
-
-    int dia = std::stoi(dia_str);
-    int mes = std::stoi(mes_str);
-    int anio = std::stoi(anio_str);
-    if (anio < other2.fechatransaccion.anio){
-        return false;
-    }
-    else if (anio > other2.fechatransaccion.anio){
-        return true;
-    }
-    else{
-        if (mes < other2.fechatransaccion.mes) {
-            return false;
-        }
-        else if (mes > other2.fechatransaccion.mes){
-            return true;
-        }
-        else{
-            if (dia < other2.fechatransaccion.dia){
-                return false;
-            }
-            return true;
-        }
-    }
-}
-
-bool operator<(const string& fecha_, const transaccion &other2) {
-    size_t indice_barra_1 = fecha_.find('/');
-    size_t indice_barra_2 = fecha_.rfind('/');
-
-    std::string dia_str = fecha_.substr(0, indice_barra_1);
-    std::string mes_str = fecha_.substr(indice_barra_1 + 1, indice_barra_2 - indice_barra_1 - 1);
-    std::string anio_str = fecha_.substr(indice_barra_2 + 1);
-
-    int dia = std::stoi(dia_str);
-    int mes = std::stoi(mes_str);
-    int anio = std::stoi(anio_str);
-    if (anio > other2.fechatransaccion.anio){
-        return false;
-    }
-    else if (anio < other2.fechatransaccion.anio){
-        return true;
-    }
-    else{
-        if (mes > other2.fechatransaccion.mes) {
-            return false;
-        }
-        else if (mes < other2.fechatransaccion.mes){
-            return true;
-        }
-        else{
-            if (dia >= other2.fechatransaccion.dia){
-                return false;
-            }
-            return true;
-        }
-    }
-}
-
-bool operator>=(const transaccion &other1, const transaccion &other2) {
-    if (other1.fechatransaccion.anio < other2.fechatransaccion.anio){
-        return false;
-    }
-    else if (other1.fechatransaccion.anio > other2.fechatransaccion.anio){
-        return true;
-    }
-    else{
-        if (other1.fechatransaccion.mes < other2.fechatransaccion.mes){
-            return false;
-        }
-        else if (other1.fechatransaccion.mes > other2.fechatransaccion.mes){
-            return true;
-        }
-        else{
-            if (other1.fechatransaccion.dia < other2.fechatransaccion.dia){
+            else if (other1.fechatransaccion.mes > other2.fechatransaccion.mes){
                 return false;
             }
             else{
+                if (other1.fechatransaccion.dia >= other2.fechatransaccion.dia){
+                    return false;
+                }
                 return true;
             }
         }
     }
-}
-bool operator>(const transaccion &other1, const transaccion &other2) {
-    if (other1.fechatransaccion.anio < other2.fechatransaccion.anio){
-        return false;
-    }
-    else if (other1.fechatransaccion.anio > other2.fechatransaccion.anio){
-        return true;
-    }
-    else{
-        if (other1.fechatransaccion.mes < other2.fechatransaccion.mes){
-            return false;
-        }
-        else if (other1.fechatransaccion.mes > other2.fechatransaccion.mes){
+    static bool isMayorIgual(const transaccion& other1, const transaccion& other2){
+        if (other1.fechatransaccion.anio < other2.fechatransaccion.anio){
             return true;
         }
+        else if (other1.fechatransaccion.anio > other2.fechatransaccion.anio){
+            return false;
+        }
         else{
-            if (other1.fechatransaccion.dia <= other2.fechatransaccion.dia){
+            if (other1.fechatransaccion.mes < other2.fechatransaccion.mes){
+                return true;
+            }
+            else if (other1.fechatransaccion.mes > other2.fechatransaccion.mes){
                 return false;
             }
             else{
+                if (other1.fechatransaccion.dia > other2.fechatransaccion.dia){
+                    return false;
+                }
                 return true;
             }
         }
     }
-}
-
-bool operator<(const transaccion& other1, const transaccion& other2){
-    if (other1.fechatransaccion.anio > other2.fechatransaccion.anio){
-        return false;
-    }
-    else if (other1.fechatransaccion.anio < other2.fechatransaccion.anio){
-        return true;
-    }
-    else{
-        if (other1.fechatransaccion.mes > other2.fechatransaccion.mes){
+    static bool isMenor(const transaccion& other1, const transaccion& other2){
+        if (other1.fechatransaccion.anio < other2.fechatransaccion.anio){
             return false;
         }
-        else if (other1.fechatransaccion.mes < other2.fechatransaccion.mes){
+        else if (other1.fechatransaccion.anio > other2.fechatransaccion.anio){
             return true;
         }
         else{
-            if (other1.fechatransaccion.dia >= other2.fechatransaccion.dia){
+            if (other1.fechatransaccion.mes < other2.fechatransaccion.mes){
                 return false;
             }
+            else if (other1.fechatransaccion.mes > other2.fechatransaccion.mes){
+                return true;
+            }
             else{
+                if (other1.fechatransaccion.dia <= other2.fechatransaccion.dia){
+                    return false;
+                }
                 return true;
             }
         }
     }
-}
-bool operator<=(const transaccion &other1, const transaccion &other2) {
-    if (other1.fechatransaccion.anio > other2.fechatransaccion.anio){
-        return false;
-    }
-    else if (other1.fechatransaccion.anio < other2.fechatransaccion.anio){
-        return true;
-    }
-    else{
-        if (other1.fechatransaccion.mes > other2.fechatransaccion.mes){
+    static bool isMenorIgual(const transaccion& other1, const transaccion& other2){
+        if (other1.fechatransaccion.anio < other2.fechatransaccion.anio){
             return false;
         }
-        else if (other1.fechatransaccion.mes < other2.fechatransaccion.mes){
+        else if (other1.fechatransaccion.anio > other2.fechatransaccion.anio){
             return true;
         }
         else{
-            if (other1.fechatransaccion.dia > other2.fechatransaccion.dia){
+            if (other1.fechatransaccion.mes < other2.fechatransaccion.mes){
                 return false;
             }
+            else if (other1.fechatransaccion.mes > other2.fechatransaccion.mes){
+                return true;
+            }
             else{
+                if (other1.fechatransaccion.dia < other2.fechatransaccion.dia){
+                    return false;
+                }
                 return true;
             }
         }
     }
-}
-
-
-
-bool operator==(const transaccion &A, const transaccion &B) {
-    if (A.fechatransaccion.anio == B.fechatransaccion.anio && A.fechatransaccion.mes == B.fechatransaccion.mes && A.fechatransaccion.dia == B.fechatransaccion.dia){
-        return true;
+    static bool isMayor(double a, const transaccion& b){
+        return a < b.monto;
     }
-    return false;
-}
+    static bool isMayorIgual(double a, const transaccion& b){
+        return a <= b.monto;
+    }
+    static bool isMenor(double a, const transaccion& b){
+        return a > b.monto;
+    }
+    static bool isMenorIgual(double a, const transaccion& b){
+        return a >= b.monto;
+    }
 
+    static bool isMayorIgual(const string& fecha, const transaccion& other2){
+        size_t indice_barra_1 = fecha.find('/');
+        size_t indice_barra_2 = fecha.rfind('/');
 
+        std::string dia_str = fecha.substr(0, indice_barra_1);
+        std::string mes_str = fecha.substr(indice_barra_1 + 1, indice_barra_2 - indice_barra_1 - 1);
+        std::string anio_str = fecha.substr(indice_barra_2 + 1);
 
+        int dia = std::stoi(dia_str);
+        int mes = std::stoi(mes_str);
+        int anio = std::stoi(anio_str);
+        if (anio < other2.fechatransaccion.anio){
+            return true;
+        }
+        else if (anio > other2.fechatransaccion.anio){
+            return false;
+        }
+        else{
+            if (mes < other2.fechatransaccion.mes){
+                return true;
+            }
+            else if (mes > other2.fechatransaccion.mes){
+                return false;
+            }
+            else{
+                if (dia > other2.fechatransaccion.dia){
+                    return false;
+                }
+                return true;
+            }
+        }
+    }
+    static bool isMayor(const string& fecha, const transaccion& other2){
+        size_t indice_barra_1 = fecha.find('/');
+        size_t indice_barra_2 = fecha.rfind('/');
+
+        std::string dia_str = fecha.substr(0, indice_barra_1);
+        std::string mes_str = fecha.substr(indice_barra_1 + 1, indice_barra_2 - indice_barra_1 - 1);
+        std::string anio_str = fecha.substr(indice_barra_2 + 1);
+
+        int dia = std::stoi(dia_str);
+        int mes = std::stoi(mes_str);
+        int anio = std::stoi(anio_str);
+        if (anio < other2.fechatransaccion.anio){
+            return true;
+        }
+        else if (anio > other2.fechatransaccion.anio){
+            return false;
+        }
+        else{
+            if (mes < other2.fechatransaccion.mes){
+                return true;
+            }
+            else if (mes > other2.fechatransaccion.mes){
+                return false;
+            }
+            else{
+                if (dia >= other2.fechatransaccion.dia){
+                    return false;
+                }
+                return true;
+            }
+        }
+    }
+    static bool isMenorIgual(const string& fecha, const transaccion& other2){
+        size_t indice_barra_1 = fecha.find('/');
+        size_t indice_barra_2 = fecha.rfind('/');
+
+        std::string dia_str = fecha.substr(0, indice_barra_1);
+        std::string mes_str = fecha.substr(indice_barra_1 + 1, indice_barra_2 - indice_barra_1 - 1);
+        std::string anio_str = fecha.substr(indice_barra_2 + 1);
+
+        int dia = std::stoi(dia_str);
+        int mes = std::stoi(mes_str);
+        int anio = std::stoi(anio_str);
+        if (anio < other2.fechatransaccion.anio){
+            return false;
+        }
+        else if (anio > other2.fechatransaccion.anio){
+            return true;
+        }
+        else{
+            if (mes < other2.fechatransaccion.mes){
+                return false;
+            }
+            else if (mes > other2.fechatransaccion.mes){
+                return true;
+            }
+            else{
+                if (dia < other2.fechatransaccion.dia){
+                    return false;
+                }
+                return true;
+            }
+        }
+    }
+    static bool isMenor(const string& fecha, const transaccion& other2){
+        size_t indice_barra_1 = fecha.find('/');
+        size_t indice_barra_2 = fecha.rfind('/');
+
+        std::string dia_str = fecha.substr(0, indice_barra_1);
+        std::string mes_str = fecha.substr(indice_barra_1 + 1, indice_barra_2 - indice_barra_1 - 1);
+        std::string anio_str = fecha.substr(indice_barra_2 + 1);
+
+        int dia = std::stoi(dia_str);
+        int mes = std::stoi(mes_str);
+        int anio = std::stoi(anio_str);
+        if (anio < other2.fechatransaccion.anio){
+            return false;
+        }
+        else if (anio > other2.fechatransaccion.anio){
+            return true;
+        }
+        else{
+            if (mes < other2.fechatransaccion.mes){
+                return false;
+            }
+            else if (mes > other2.fechatransaccion.mes){
+                return true;
+            }
+            else{
+                if (dia <= other2.fechatransaccion.dia){
+                    return false;
+                }
+                return true;
+            }
+        }
+    }
+};
 ostream& operator<<(ostream &os, const transaccion &other1) {
     other1.display();
     os << "exit";
