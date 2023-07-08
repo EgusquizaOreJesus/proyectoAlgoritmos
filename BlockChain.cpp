@@ -1,6 +1,7 @@
 #include <iostream>
 #include "BlockChain.h"
 #include "Btree.h"
+
 #include "ProofOfWorkSystem.h"
 using namespace std;
 
@@ -11,10 +12,10 @@ int main() {
     vector<transaccion> total;
     transaccion a(100,"Jesus","Chavez",20,10,2022);
     transaccion b(200,"Chambilla","Chavez",21,10,2022);
-    transaccion c(300,"Rodrigo","Hermes",22,10,2022);
-    transaccion  d(400,"Miguel","Chavez",23,10,2022);
+    transaccion c(300,"Mai ","Hermes",22,10,2022);
+    transaccion  d(400,"Miguel","Chavez",30,10,2022);
     transaccion e(500,"Pedro","Chavez",24,10,2022);
-    transaccion f(600,"Benjamin","Chavez",25,10,2022);
+    transaccion f(150,"Benjamin","Chavez",25,10,2022);
     transaccion g(700,"Joaquin","Chavez",26,10,2022);
 
     total.push_back(a);
@@ -59,18 +60,19 @@ int main() {
     alfa2.insert(e);
     alfa2.insert(f);
     alfa2.insert(g);
-//auto v = alfa2.range_searching("20/10/2022","23/10/2023");
 
-//
-//    cout << "tamano: "<< v.size() << endl;
-//    for(const auto& x:v){
-//        cout << "emisor: " <<x.emisor << endl;
-//    }
-    alfa.view_blockChain();
-    auto v = alfa.search(700);
+auto v = alfa2.range_searching("22/10/2022","30/10/2022");
+
+
+    cout << "tamano: "<< v.size() << endl;
     for(const auto& x:v){
-        x.display();
-        cout << endl;
+        cout << "emisor: " <<x.emisor << endl;
     }
+
+//    auto v = alfa.search("21/10/2022" ,fechaX);
+//    for(const auto& x:v){
+//        x.display();
+//        cout << endl;
+//    }
     return 0;
 }
