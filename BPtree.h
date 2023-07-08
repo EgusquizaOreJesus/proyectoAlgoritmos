@@ -2,80 +2,156 @@
 
 #include <iostream>
 #include "stack"
+#include "vector"
 using namespace std;
 int MAX_SIZE = 3;
 
-class BPTree;
-class Node {
-    bool IS_LEAF{};
-    int *key, size{};
-    Node **ptr;
-    friend class BPTree;
 
-public:
-    Node();
-};
+template<typename T>
 class BPTree {
-    Node *root;
-    void insertInternal(int, Node *, Node *);
-    void removeInternal(int, Node *, Node *);
-    Node *findParent(Node *, Node *);
+
+
+    struct NodeBptree {
+        bool IS_LEAF{};
+        T *key;
+        int size{};
+        NodeBptree **ptr;
+        friend class BPTree;
+
+
+        NodeBptree() {
+            IS_LEAF = false;
+            key = new T[MAX_SIZE];
+            ptr = new NodeBptree *[MAX_SIZE + 1];
+        }
+
+        ~NodeBptree() {
+            delete[] key;
+            for(int i = 0; i < size + 1; i++) {
+                delete ptr[i];
+            }
+            delete[] ptr;
+        }
+    };
+
+
+    NodeBptree *root;
+    void insertInternal(T, NodeBptree *, NodeBptree *);
+    void removeInternal(T, NodeBptree *, NodeBptree *);
+//    NodeBptree *findParent(NodeBptree *, NodeBptree *);
+    NodeBptree *findParent(NodeBptree *temp, NodeBptree *child) {
+        NodeBptree *parent;
+        if (temp->IS_LEAF || (temp->ptr[0])->IS_LEAF) { //si el nodo es hoja  o su primer hijo es hoja se retorna nullptr
+            return nullptr;
+        }
+        for (int i = 0; i < temp->size + 1; i++) { // busca en todos sus punteros al hijo
+            if (temp->ptr[i] == child) {
+                parent = temp;
+                return parent;  // si lo encuentra lo retorna
+            } else {
+                parent = findParent(temp->ptr[i], child);   // caso contrario sigue buscando
+                if (parent != nullptr)
+                    return parent;
+            }
+        }
+        return parent;
+    }
+    int  findParentIndex(NodeBptree* cursor, NodeBptree* child);
 
 public:
     BPTree();
-    void search_value(int);
-    void insert_value(int);
-    void remove_value(int);
-    static void print_BPTree(Node *);
+    void search_value(T value){
+        if (root == nullptr) {
+            cout << "El arbol esta vacio\n";
+        } else {
+            NodeBptree *temp = root;
+            while (!temp->IS_LEAF) {
+                for (int i = 0; i < temp->size; i++) {
+                    if (value < temp->key[i]) {
+                        temp = temp->ptr[i];
+                        break;
+                    }
+                    if (i == temp->size - 1) {
+                        temp = temp->ptr[i + 1];
+                        break;
+                    }
+                }
+            }
+            for (int i = 0; i < temp->size; i++) {
+                if (temp->key[i] == value) {
+                    cout << "Valor encontrado\n";
+                    return;
+                }
+            }
+            cout << "Valor no encontrado\n";
+        }
+    }
+    vector<T> range_search(T , T);
+//    vector<T> range_search(string , string);
+    void insert(T);
+    void remove(T);
+    T found_max();
+    T found_min() ;
+    static void print_BPTree(NodeBptree *);
     void print_BPTree();
 };
 
-Node::Node() {
-    IS_LEAF = false;
-    key = new int[MAX_SIZE];
-    ptr = new Node *[MAX_SIZE + 1];
-}
-BPTree::BPTree() {
-    root = nullptr;
-}
 
 
-void BPTree::search_value(int value) {
+template<typename T>
+T BPTree<T>::found_max() {
+    T val_max;
+    NodeBptree *temp = root;
     if (root == nullptr) {
-        cout << "El arbol esta vacio\n";
+        val_max = temp->key[(temp->size) - 1];
     } else {
-        Node *temp = root;
         while (!temp->IS_LEAF) {
-            for (int i = 0; i < temp->size; i++) {
-                if (value < temp->key[i]) {
-                    temp = temp->ptr[i];
-                    break;
-                }
-                if (i == temp->size - 1) {
-                    temp = temp->ptr[i + 1];
-                    break;
-                }
-            }
+            temp = temp->ptr[temp->size];
         }
-        for (int i = 0; i < temp->size; i++) {
-            if (temp->key[i] == value) {
-                cout << "Valor encontrado\n";
-                return;
-            }
-        }
-        cout << "Valor no encontrado\n";
     }
+
+    val_max = temp->key[(temp->size) - 1];
+    return val_max;
 }
 
-void BPTree::insert_value(int value) {
+template<typename T>
+T BPTree<T>::found_min() {
+    T val_min;
+    NodeBptree *temp = root;
     if (root == nullptr) {
-        root = new Node;
+        val_min = temp->key[0];
+    } else {
+        while (!temp->IS_LEAF) {
+            temp = temp->ptr[0];
+        }
+    }
+
+    val_min = temp->key[0];
+    return val_min;
+};
+template<typename T>
+int BPTree<T>::findParentIndex(NodeBptree* cursor, NodeBptree* child) {
+    int i;
+    // Recorre los punteros del nodo
+    for (i = 0; i < cursor->size + 1; i++) {
+        // Si el puntero en el índice actual apunta al hijo, hemos encontrado el índice
+        if (cursor->ptr[i] == child) {
+            break;
+        }
+    }
+    return i;  // Devuelve el índice del padre
+}
+
+template<typename T>
+void BPTree<T>::insert(T value) {
+    if (root == nullptr) {
+        root = new NodeBptree;
         root->key[0] = value;
         root->IS_LEAF = true;
         root->size = 1;
     } else {
-        Node *cursor = root;
-        Node *parent;
+        NodeBptree *cursor = root;
+        NodeBptree *parent;
         ///se busca llegar a la posicion para insertar
         while (!cursor->IS_LEAF) {
             parent = cursor;                        // se guarda el puntero previo
@@ -106,8 +182,9 @@ void BPTree::insert_value(int value) {
             cursor->ptr[cursor->size - 1] = nullptr;
         } else {    /// caso donde el nodo esta lleno
             ///se crea un nodo temporal para poder hacer la division
-            Node *newLeaf = new Node;
-            int virtualNode[MAX_SIZE + 1];
+            NodeBptree *newLeaf = new NodeBptree;
+            T virtualNode[MAX_SIZE + 1];
+
             for (int i = 0; i < MAX_SIZE; i++) {
                 virtualNode[i] = cursor->key[i];
             }
@@ -123,7 +200,7 @@ void BPTree::insert_value(int value) {
             cursor->size = (MAX_SIZE + 1) / 2;                   /////!!!!!!!!!! declaracion de pesos
             newLeaf->size = MAX_SIZE + 1 - (MAX_SIZE + 1)/2;     ////// en este caso se deja con menor numero de datos al de la izquierda y con mayor a la derecha
             cursor->ptr[cursor->size] = newLeaf;
-            newLeaf->ptr[newLeaf->size] = cursor->ptr[MAX_SIZE]; /// duda dudosa
+            newLeaf->ptr[newLeaf->size] = cursor->ptr[MAX_SIZE]; /// establece los ultimos punteros a null
             cursor->ptr[MAX_SIZE] = nullptr;
 
             ///asignacion de los valores a los nodos reales
@@ -136,7 +213,7 @@ void BPTree::insert_value(int value) {
 
             ///si existe un padre se le asigna los nuevos punteros
             if (cursor == root) {
-                Node *newRoot = new Node;
+                auto *newRoot = new NodeBptree;
                 newRoot->key[0] = newLeaf->key[0];  // se asigna el menor valor del nuevo hijo
                 newRoot->ptr[0] = cursor;           // puntero al hijo de la izquierda
                 newRoot->ptr[1] = newLeaf;          // puntero al hijo de la derecha
@@ -150,7 +227,8 @@ void BPTree::insert_value(int value) {
     }
 }
 
-void BPTree::insertInternal(int value, Node *cursor, Node *child) {
+template<typename T>
+void BPTree<T>::insertInternal(T value, NodeBptree *cursor, NodeBptree *child) {
     if (cursor->size < MAX_SIZE) {
         int i = 0;
         //busqueda de posicion a insertar el valor
@@ -168,9 +246,9 @@ void BPTree::insertInternal(int value, Node *cursor, Node *child) {
         cursor->size++;
         cursor->ptr[i + 1] = child;
     } else {
-        Node *newInternal = new Node;
-        int virtualKey[MAX_SIZE + 1];
-        Node *virtualPtr[MAX_SIZE + 2];
+        auto *newInternal = new NodeBptree;
+        T virtualKey[MAX_SIZE + 1];
+        NodeBptree *virtualPtr[MAX_SIZE + 2];
         //copia de los valores de los punteros del nodo
         for (int i = 0; i < MAX_SIZE; i++) {
             virtualKey[i] = cursor->key[i];
@@ -205,7 +283,7 @@ void BPTree::insertInternal(int value, Node *cursor, Node *child) {
             newInternal->ptr[i] = virtualPtr[j];
         }
         if (cursor == root) {
-            Node *newRoot = new Node;
+            auto *newRoot = new NodeBptree;
             newRoot->key[0] = cursor->key[cursor->size];    ///guarda el valor mas alto a la izquierda
             newRoot->ptr[0] = cursor;
             newRoot->ptr[1] = newInternal;
@@ -218,31 +296,63 @@ void BPTree::insertInternal(int value, Node *cursor, Node *child) {
     }
 }
 
-///funcion que nos permite conocer el nodo padre
-Node *BPTree::findParent(Node *temp, Node *child) {
-    Node *parent;
-    if (temp->IS_LEAF || (temp->ptr[0])->IS_LEAF) { //si el nodo es hoja  o su primer hijo es hoja se retorna nullptr
-        return nullptr;
-    }
-    for (int i = 0; i < temp->size + 1; i++) { // busca en todos sus punteros al hijo
-        if (temp->ptr[i] == child) {
-            parent = temp;
-            return parent;  // si lo encuentra lo retorna
-        } else {
-            parent = findParent(temp->ptr[i], child);   // caso contrario sigue buscando
-            if (parent != nullptr)
-                return parent;
+
+
+
+//template<typename T>
+//vector<T> BPTree<T>::range_search(string init_value, string end_value) {
+//    return range_search(init_value, end_value);
+//}
+
+template<typename T>
+vector<T> BPTree<T>::range_search(T init_value, T end_value) {
+    vector<T> result_values ;
+    if (root == nullptr) {
+        cout << "El arbol esta vacio\n";
+    } else {
+        NodeBptree *temp_ini = root;
+        while (!temp_ini->IS_LEAF) {
+            for (int i = 0; i < temp_ini->size; i++) {
+                if (init_value < temp_ini->key[i]) {
+                    temp_ini = temp_ini->ptr[i];
+                    break;
+                }
+                if (i == temp_ini->size - 1) {
+                    temp_ini = temp_ini->ptr[i + 1];
+                    break;
+                }
+            }
         }
+
+        int i = 0;
+        for (; i < temp_ini->size; i++) {
+
+            if (temp_ini->key[i] >= init_value and temp_ini->key[i] <= end_value) {
+//                cout << temp_ini->key[i] << " ";
+                result_values.push_back(temp_ini->key[i]);
+            }
+            if((i == temp_ini->size - 1) and temp_ini->ptr[i+1]!= nullptr){
+                temp_ini = temp_ini->ptr[i+1];
+                i = 0;
+            }
+            if(temp_ini->key[i]>end_value){
+                break;
+            }
+
+        }
+
+        return result_values;
     }
-    return parent;
 }
 
-void BPTree::remove_value(int value) {
+
+template<typename T>
+void BPTree<T>::remove(T value) {
     if (root == nullptr) {
         cout << "Tree empty\n";
     } else {
-        Node *temp = root;    //nodo actual
-        Node *parent;           //se guarda el padre
+        NodeBptree *temp = root;    //nodo actual
+        NodeBptree *parent;           //se guarda el padre
         int leftSibling, rightSibling;
         while (!temp->IS_LEAF) {
             for (int i = 0; i < temp->size; i++) {
@@ -297,7 +407,7 @@ void BPTree::remove_value(int value) {
             return;
         }   // caso contrario se tiene que preguntar si el hermano del costado nos puede prestar
         if (leftSibling >= 0) {
-            Node *leftNode = parent->ptr[leftSibling];
+            NodeBptree *leftNode = parent->ptr[leftSibling];
             if (leftNode->size >= (MAX_SIZE + 1) / 2 + 1) { // se realiza el prestamo de valores y actualizaciion de los punteros y valores en el nodo padre
                 for (int i = temp->size; i > 0; i--) {
                     temp->key[i] = temp->key[i - 1];
@@ -314,7 +424,7 @@ void BPTree::remove_value(int value) {
             }
         }   // caso donde el de la izquierda no nos puede prestar
         if (rightSibling <= parent->size) {
-            Node *rightNode = parent->ptr[rightSibling];
+            NodeBptree *rightNode = parent->ptr[rightSibling];
             if (rightNode->size >= (MAX_SIZE + 1) / 2 + 1) { // se realiza el prestamo de valores y actualizaciion de los punteros y valores en el nodo padre
                 temp->size++;
                 temp->ptr[temp->size] = temp->ptr[temp->size - 1];
@@ -331,7 +441,7 @@ void BPTree::remove_value(int value) {
             }
         }
         if (leftSibling >= 0) { //casos donde se elimina y se tiene que perder el valor
-            Node *leftNode = parent->ptr[leftSibling];
+            NodeBptree *leftNode = parent->ptr[leftSibling];
             for (int i = leftNode->size, j = 0; j < temp->size; i++, j++) {
                 leftNode->key[i] = temp->key[j];
             }
@@ -343,7 +453,7 @@ void BPTree::remove_value(int value) {
             delete[] temp->ptr;
             delete temp;
         } else if (rightSibling <= parent->size) {
-            Node *rightNode = parent->ptr[rightSibling];
+            NodeBptree *rightNode = parent->ptr[rightSibling];
             for (int i = temp->size, j = 0; j < rightNode->size; i++, j++) {
                 temp->key[i] = rightNode->key[j];
             }
@@ -359,7 +469,8 @@ void BPTree::remove_value(int value) {
     }
 }
 
-void BPTree::removeInternal(int value, Node *temp, Node *child) {
+template<typename T>
+void BPTree<T>::removeInternal(T value, NodeBptree *temp, NodeBptree *child) {
     if (temp == root) {
         // Caso donde ya no se puede prestar de los hermanos y se tiene que eliminar el nodo si o si;
         if (temp->size == 1) {
@@ -415,7 +526,7 @@ void BPTree::removeInternal(int value, Node *temp, Node *child) {
         return;
 
     /// Se busca el padre del nodo 'temp'
-    Node *parent = findParent(root, temp);
+    NodeBptree *parent = findParent(root, temp);
     int leftSibling = 0, rightSibling;
     for (pos = 0; pos < parent->size + 1; pos++) {
         if (parent->ptr[pos] == temp) {
@@ -427,7 +538,7 @@ void BPTree::removeInternal(int value, Node *temp, Node *child) {
 
     /// Si el hermano izquierdo puede prestar valores
     if (leftSibling >= 0) {
-        Node *leftNode = parent->ptr[leftSibling];
+        NodeBptree *leftNode = parent->ptr[leftSibling];
         if (leftNode->size >= (MAX_SIZE + 1) / 2) {
             /// Realiza el préstamo de valores y actualización de punteros y valores en el nodo padre
             for (int i = temp->size; i > 0; i--) {
@@ -447,7 +558,7 @@ void BPTree::removeInternal(int value, Node *temp, Node *child) {
 
     /// Si el hermano derecho puede prestar valores
     if (rightSibling <= parent->size) {
-        Node *rightNode = parent->ptr[rightSibling];
+        NodeBptree *rightNode = parent->ptr[rightSibling];
         if (rightNode->size >= (MAX_SIZE + 1) / 2) {
             // Realiza el préstamo de valores y actualización de punteros y valores en el nodo padre
             temp->key[temp->size] = parent->key[pos];
@@ -467,7 +578,7 @@ void BPTree::removeInternal(int value, Node *temp, Node *child) {
 
     /// Fusiona con el hermano izquierdo si no puede prestar valores
     if (leftSibling >= 0) {
-        Node *leftNode = parent->ptr[leftSibling];
+        NodeBptree *leftNode = parent->ptr[leftSibling];
         leftNode->key[leftNode->size] = parent->key[leftSibling];
         for (int i = leftNode->size + 1, j = 0; j < temp->size; j++) {
             leftNode->key[i] = temp->key[j];
@@ -480,9 +591,9 @@ void BPTree::removeInternal(int value, Node *temp, Node *child) {
         temp->size = 0;
         removeInternal(parent->key[leftSibling], parent, temp);
     }
-    /// Fusiona con el hermano derecho si no puede prestar valores
+        /// Fusiona con el hermano derecho si no puede prestar valores
     else if (rightSibling <= parent->size) {
-        Node *rightNode = parent->ptr[rightSibling];
+        NodeBptree *rightNode = parent->ptr[rightSibling];
         temp->key[temp->size] = parent->key[rightSibling - 1];
         for (int i = temp->size + 1, j = 0; j < rightNode->size; j++) {
             temp->key[i] = rightNode->key[j];
@@ -497,12 +608,13 @@ void BPTree::removeInternal(int value, Node *temp, Node *child) {
     }
 }
 
-void BPTree::print_BPTree(Node *root) {
-    stack<Node*> nodeStack;
+template<typename T>
+void BPTree<T>::print_BPTree(NodeBptree *root) {
+    stack<NodeBptree*> nodeStack;
     nodeStack.push(root);
 
     while (!nodeStack.empty()) {
-        Node* currentNode = nodeStack.top();
+        NodeBptree* currentNode = nodeStack.top();
         nodeStack.pop();
 
         for (int i = 0; i < currentNode->size; i++) {
@@ -518,7 +630,13 @@ void BPTree::print_BPTree(Node *root) {
     }
 }
 
-void BPTree::print_BPTree() {
+template<typename T>
+void BPTree<T>::print_BPTree() {
     print_BPTree(root);
+}
+
+template<typename T>
+BPTree<T>::BPTree() {
+    root= nullptr;
 }
 
