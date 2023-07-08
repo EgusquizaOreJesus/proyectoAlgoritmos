@@ -9,6 +9,7 @@
 #include "ForwardList.h"
 #include "ChainHash.h"
 #include "transaccion.h"
+
 int mine( int nonce, const string& data , string challenge)
 {
     string hashcode= sha256(data +to_string(nonce));
@@ -92,8 +93,6 @@ struct block{
         }
     }
 
-
-
     void printblock(){
         cout<<"ID :"<<id<<endl;
         cout<<"NONCE :"<<nonce<<endl;
@@ -114,7 +113,7 @@ private:
     ChainHash<int,block*> block_references;
 
 public:
-     blockchain(const vector<transaccion>& data){
+    blockchain(const vector<transaccion>& data){
         id=1;
         auto* new_block= new block(0,data,"");
         block_references.insert(make_pair(new_block->id,new_block));
@@ -140,7 +139,7 @@ public:
         //block * current_block = blockchain_.front();
         block * current_block=block_references[id++];
         new_block2 =new block(current_block->id ,current_block->data2 , current_block->current_hash);
-       block_references.insert(make_pair(id,new_block2));
+        block_references.insert(make_pair(id,new_block2));
 
 
 
@@ -179,6 +178,67 @@ public:
             return block_references[index];
         }
 
+    }
+    void etc(){
+        cout << block_references.getsize();
+    }
+    bool isblock(int index){
+        if(!block_references.contains(index))
+        {
+            return false;
+        }
+        return true;
+    }
+
+    vector<transaccion> search(const string& data,eleccion a){
+        vector<transaccion> result;
+        for (int i = 1; i <= this->block_references.getsize(); ++i) {
+            for (const auto& trans: block_references[i]->data2) {
+                if (a == receptor){
+                    if (data == trans.receptor){
+                        result.push_back(trans);
+                    }
+                }
+                else if (a == emisor){
+                    if (data == trans.emisor){
+                        result.push_back(trans);
+                    }
+                }
+
+                else if (a == fechaX){
+                    if (comparador::igualdad(data,trans)){
+                        result.push_back(trans);
+                    }
+                }
+            }
+        }
+        return result;
+
+    }
+
+    vector<transaccion> search(double data){
+        vector<transaccion> result;
+        for (int i = 1; i <= this->block_references.getsize(); ++i) {
+            for (const auto& trans: block_references[i]->data2) {
+                if (trans.monto == data){
+                    result.push_back(trans);
+                }
+            }
+        }
+        return result;
+
+    }
+
+    vector<transaccion> search(double data,int index){
+        vector<transaccion> result;
+        if (isblock(index)){
+            for (const auto& trans: block_references[index]->data2) {
+                if (trans.monto == data){
+                    result.push_back(trans);
+                }
+            }
+        }
+        return result;
     }
     int getLastBlockId(){
         return id;

@@ -9,7 +9,7 @@
 #include <cmath>
 #include <queue>
 #include "node.h"
-
+#include "transaccion.h"
 using namespace std;
 
 template<typename TK>
@@ -43,7 +43,13 @@ public:
     TK maxKey(){return maxKey(this->root);};  // maximo valor de la llave en el arbol
 
     vector<TK> range_searching(TK lb , TK ub);
-    vector<TK> range_searching(string lb , string ub);
+
+    vector<TK> range_searching(string lb , string ub){
+        return root->range_search(lb,ub);
+    }
+    vector<TK> range_searching(double lb , double ub){
+        return root->range_search(lb,ub);
+    }
     void clear(){this->root->killSelf(); this->root = nullptr; n = 0;}; // eliminar todos lo elementos del arbol
     int size(){return n;}; // retorna el total de elementos insertados
     ~BTree(){this->root->killSelf();};     // liberar memoria
@@ -311,9 +317,9 @@ void BTree<TK>::insert(TK key){
 template<typename TK>
 SplitResult<TK>* BTree<TK>::insert(Node<TK>* &node, TK key){
     int i = 0;
-    while (i < node->count && key > node->keys[i])
+    while (i < node->count && comparador::isMayor(node->keys[i],key))
         i++;
-    if (i < node->count && node->keys[i] == key)
+    if (i < node->count && comparador::igualdad(node->keys[i],key))
         return nullptr;
 
     if (node->leaf)
@@ -352,7 +358,7 @@ template<typename TK>
 void BTree<TK>::relocate(Node<TK> *&node, TK key, Node<TK> *key_right_tree){
     int i = node->count - 1;
     // se  mueve las keys para dejar espacio para la nueva key
-    while (i >= 0 && key < node->keys[i]) {
+    while (i >= 0 && comparador::isMayor(key,node->keys[i])) {
         node->keys[i + 1] = node->keys[i];
         node->children[i + 2] = node->children[i + 1];
         i--;
@@ -390,7 +396,7 @@ SplitResult<TK>* BTree<TK>::split_par(Node<TK>* &node, TK key, Node<TK> *key_rig
     // actualizar la cantidad de elementos del nodo
     node->count = m;
     // insertar la key en el lado respectivo
-    if (key < middle)
+    if (comparador::isMayor(key,middle))
         relocate(node, key, key_right_tree);
     else
         relocate(right_node, key, key_right_tree);
@@ -404,7 +410,7 @@ SplitResult<TK>* BTree<TK>::split_impar(Node<TK>* &node, TK key, Node<TK> *key_r
     TK middle;
     // calcular el elemento central correctamente
     int m = (M - 1) / 2;
-    if (key > node->keys[m])
+    if (comparador::isMayor(node->keys[m],key))
     {
         right_node = generate_right_node(node, m + 1);
         middle = node->keys[m];
@@ -415,7 +421,7 @@ SplitResult<TK>* BTree<TK>::split_impar(Node<TK>* &node, TK key, Node<TK> *key_r
     {
         m = m - 1;
         right_node = generate_right_node(node, m + 1);
-        if (key < node->keys[m])
+        if (comparador::isMayor(key,node->keys[m]))
         {
             middle = node->keys[m];
             node->count = m;
@@ -520,8 +526,7 @@ vector<TK> BTree<TK>::range_searching(TK lb , TK ub) {
     return root->range_search(lb,ub);
 }
 
-template<typename TK>
-vector<TK> BTree<TK>::range_searching(string lb , string ub) {
-    return root->range_search(lb,ub);
-}
+//vector<TK> BTree<TK>::range_searching(T lb , T ub) {
+//    return root->range_search(lb,ub);
+//}
 #endif //PROYECTOALGORITMOS_BTREE_H

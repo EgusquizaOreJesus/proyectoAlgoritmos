@@ -118,6 +118,9 @@ public:
     int bucket_size(int i){
         return array[i].size();
     }
+    int getsize(){
+        return size;
+    }
 
     typename ForwardList<std::pair<TK, TV>>::iterator begin(int i){
         return array[i].begin();
