@@ -14,9 +14,9 @@
 
 En la actualidad, la necesidad de garantizar la seguridad y la integridad de los datos ha impulsado el desarrollo de tecnologías innovadoras en busca de soluciones confiables y eficientes. Entre estas soluciones revolucionarias destaca el Blockchain. Con el paso del tiempo, esta tecnología ha ganado una gran popularidad al ofrecer una forma segura y confiable de almacenar y gestionar datos.
 
-En el marco de este proyecto, nos enfocaremos en la creación de una aplicación transaccional de interacción de datos basada en un Blockchain implementado en un solo host. Para fortalecer la seguridad y mejorar el rendimiento de la aplicación, utilizaremos estructuras de indexación como B-Tree y Hash.
+En el marco de este proyecto, nos enfocaremos en la creación de una aplicación transaccional de interacción de datos basada en un Blockchain implementado en un solo host. Para fortalecer la seguridad y mejorar el rendimiento de la aplicación, utilizaremos estructuras de indexación como B-Tree, Hash, Patricia <font color="red"> Tree ó Sufix-Tree (modificar dependiendo de...)</font>.
 
-El Blockchain, inicialmente conocido por ser la base de las criptomonedas, ha evolucionado y se ha convertido en una tecnología versátil y confiable para garantizar la integridad de la información. En este proyecto, aprovecharemos su capacidad para almacenar transacciones de manera segura y transparente, combinándola con estructuras de indexación avanzadas como B-Tree y Hash. Esta combinación nos permitirá mejorar la eficiencia y la velocidad de acceso a los datos, brindando una solución robusta y confiable para la gestión de datos transaccionales.
+El Blockchain, inicialmente conocido por ser la base de las criptomonedas, ha evolucionado y se ha convertido en una tecnología versátil y confiable para garantizar la integridad de la información. En este proyecto, aprovecharemos su capacidad para almacenar transacciones de manera segura y transparente, combinándola con estructuras de indexación avanzadas como B-Tree Tree, Hash, <font color="red"> Patricia Tree ó Sufix-Tree(modificar dependiendo de...)</font>. Esta combinación nos permitirá mejorar la eficiencia y la velocidad de acceso a los datos, brindando una solución robusta y confiable para la gestión de datos transaccionales.
 
 Nuestra aplicación transaccional no solo ofrecerá seguridad y confiabilidad, sino que también permitirá a los usuarios interactuar de manera rápida y segura con los datos.
 
@@ -28,7 +28,7 @@ En este proyecto, nuestro enfoque principal es desarrollar una aplicación trans
 
 Nuestra aplicación permitirá a los usuarios registrar transacciones de Bitcoin de forma segura, transparente y eficiente. Utilizaremos la tecnología del Blockchain para mantener un historial completo y verificable de todas las operaciones, manteniendo un registro ordenado cronológicamente.
 
-Además, implementaremos estructuras de indexación avanzadas, como el B-Tree y el Hash, para mejorar el rendimiento y la eficiencia en la búsqueda de transacciones específicas. Esto facilitará a los usuarios encontrar y analizar rápidamente la información relevante de las transacciones de Bitcoin.
+Además, implementaremos estructuras de indexación avanzadas, como el B-Tree, el Hash, Patricia <font color="red"> Tree ó Sufix-Tree (modificar dependiendo de...)</font> para mejorar el rendimiento y la eficiencia en la búsqueda de transacciones específicas. Esto facilitará a los usuarios encontrar y analizar rápidamente la información relevante de las transacciones de Bitcoin.
 
 En resumen, nuestro caso de estudio se centra en desarrollar una aplicación transaccional basada en Blockchain para la gestión de las transacciones de Bitcoin. Aprovecharemos las ventajas del Blockchain, junto con estructuras de indexación avanzadas, para ofrecer una solución confiable, eficiente y segura en la gestión de operaciones con criptomonedas.
 
@@ -44,16 +44,17 @@ Esta implementación del blockchain en el ámbito financiero nos brinda una plat
 
 El Blockchain, como una estructura de datos descentralizada y distribuida, presenta una cadena de bloques enlazados mediante referencias criptográficas. Cada bloque contiene un conjunto de transacciones y un hash único que identifica al bloque anterior. Esta característica fundamental crea una cadena inmutable, donde cualquier alteración en un bloque afecta a todos los bloques siguientes.
 
-En nuestro caso, hemos implementado una estructura de datos de Blockchain en un solo host, aprovechando las ventajas de las estructuras B-Tree y Hash. El B-Tree se utiliza para organizar eficientemente las transacciones, permitiendo una búsqueda y recuperación rápidas. Por otro lado, el Hash se emplea para calcular una representación criptográfica única de cada bloque, garantizando así la integridad de su contenido.
+En nuestro caso, hemos implementado una estructura de datos de Blockchain en un solo host, aprovechando las ventajas de las estructuras B-Tree, Hash, Patricia <font color="red"> Tree ó Sufix-Tree (modificar dependiendo de...)</font>. El B-Tree se utiliza para organizar eficientemente las transacciones, permitiendo una búsqueda y recuperación rápidas. Por otro lado, el Hash se emplea para calcular una representación criptográfica única de cada bloque, garantizando así la integridad de su contenido. Adémas, <font color="red"> el Patricia Tree ó Suffix-Tree </font> nos permite obtener una busqueda más eficiente, ya que encuentra todas las ocurrencias de una cadena o patrón específico respecto a la información de las transacciones.
 
-Al emplear estas sólidas estructuras de datos, nuestra aplicación transaccional garantiza la seguridad y la confiabilidad en el registro y la gestión de las transacciones de Bitcoin. La combinación del Blockchain, el B-Tree, el Hash y el mecanismo de prueba de trabajo crea una solución robusta y resistente a manipulaciones. Asimismo, es importante destacar que existen otros pares en la red que tienen una copia exacta del Blockchain, lo que permite realizar comparaciones y detectar cualquier cambio no autorizado.
+Al emplear estas sólidas estructuras de datos, nuestra aplicación transaccional garantiza la seguridad y la confiabilidad en el registro y la gestión de las transacciones de Bitcoin. La combinación del Blockchain, el B-Tree, el Hash, <font color="red"> Patricia Tree ó Sufix-Tree </font> y el mecanismo de prueba de trabajo crea una solución robusta y resistente a manipulaciones. Asimismo, es importante destacar que existen otros pares en la red que tienen una copia exacta del Blockchain, lo que permite realizar comparaciones y detectar cualquier cambio no autorizado.
 
-En resumen, nuestra aplicación transaccional se basa en una estructura de datos de Blockchain, potenciada por el uso eficiente del B-Tree y el Hash. Esta combinación garantiza la seguridad y la integridad de las transacciones de Bitcoin, proporcionando un entorno confiable para interactuar con los datos de manera segura y confiable.
+En resumen, nuestra aplicación transaccional se basa en una estructura de datos de Blockchain, potenciada por el uso eficiente del B-Tree, el Hash y <font color="red"> Patricia Tree ó Sufix-Tree </font>. Esta combinación garantiza la seguridad y la integridad de las transacciones de Bitcoin, proporcionando un entorno confiable para interactuar con los datos de manera segura y confiable.
 
 ## Estructuras de datos utilizadas en la aplicación
 
-Se están utilizando tres estructuras de datos con el objetivo de almacenar información y realizar consultas eficientes sobre las transacciones. Estas estructuras son fundamentales para garantizar un almacenamiento organizado y un acceso rápido a los datos transaccionales.
+Se están utilizando cuatro estructuras de datos con el objetivo de almacenar información y facilitar búsquedas y consultas eficientes sobre las transacciones que los usuarios requieren constantemente, se han implementado cuatro estructuras de datos clave. Estas estructuras, juegan un papel fundamental al asegurar un almacenamiento organizado y un acceso rápido a los datos transaccionales, brindando así una experiencia fluida y eficiente para los usuarios.
 
+<font color="red">Modificacion pendiente - imagenes</font>
 ![Ejemplo de imagen](https://media.discordapp.net/attachments/996002132891271188/1113317306651660368/image.png?width=1025&height=316)
 
 1. **Hash:**
@@ -64,47 +65,62 @@ Se están utilizando tres estructuras de datos con el objetivo de almacenar info
    - Indexamos las transacciones con información como el ID, emisor, receptor, monto y fecha.
    - Objetivo: Almacenar la información de la transacción con la indexación de hash.
 
-3. **Btree:**
+3. **Btree: <font color="red">(BP Opcional)</font>**
    - Indexamos las transacciones por fecha.
    - Utilizado para realizar búsquedas por rango entre fechas A y B.
    - Objetivo: Poder realizar consultas de tipo fecha eficientemente.
+
+4. **Patricia Tree/SufixTree**
+   - Se utiliza para indexar los nombres de los usuarios vinculados en las transacciones.
+   - Utilizado para realizar búsquedas rápidas de patrones en una transaccion.
+   - Objetivo: Mejorar la eficiencia en la búsqueda de información.
 
 ## Análisis de la complejidad en notación Big O
 
 En este análisis, nos centramos en los métodos de inserción y búsqueda en el Blockchain. A continuación, se presenta una tabla que muestra la complejidad de cada método:
 
-| Método                  | Complejidad |
-|-------------------------|-------------|
-| Buscar bloque (id)      | O(1)        |
-| Buscar fecha            | O(log(n))   |
-| Buscar por rango de fechas | O(log(n)) |
-| Insertar Bloque         | O(log(n))   |
-| Buscar usuario          | O(1)        |
-| Buscar transacción      | O(1)        |
+<font color="red">Modificacion pendiente - BPTree</font>
+| Método                  | Complejidad     | Estructura  |
+|-------------------------|-------------    |-------------|
+| Buscar bloque (id)      | O(1)            | HashTable   |
+| Buscar fecha            | O(log_m(n))     | Btree       |
+| Buscar por rango de fechas | O(log_m(n)+k)| Btree       |
+| Insertar Bloque         | O(1)            | HashTable   |
+| Buscar usuario          | O(m)            | SufixTree   |
+| Buscar transacción      | O(m)            | SufixTree   |
+
 
 Del análisis de la tabla, podemos destacar lo siguiente:
 
+Buscar bloque :
 - La búsqueda de un bloque por su identificador tiene una complejidad constante O(1), lo que significa que el tiempo necesario para encontrar un bloque no depende del tamaño del Blockchain.
+ 
+ Buscar fecha :
+- La busqueda por fecha tiene una complejidad logarítmica 
+O(log_m(n)), donde "m" representa el numero de keys y "n" representa el número de bloques en el Blockchain.
 
-- Tanto la búsqueda por fecha como la búsqueda por rango de fechas tienen una complejidad logarítmica O(log(n)), donde "n" representa el número de bloques en el Blockchain. Esto implica que el tiempo de búsqueda aumenta de forma logarítmica a medida que se incrementa el tamaño del Blockchain.
+Buscar por rango de fechas :
+- La busqueda por rango de fechas tiene complejidad logarítmica O(log_m(n)+k), en donde "m" representa el número de keys, "n" representa el número de bloques del Blockchain y "k" representa la cantidad de elementos a recorrer.
 
+Insertar Bloque :
+<font color="red">Modificacion pendiente </font>
 - La inserción de un bloque también tiene una complejidad logarítmica O(log(n)). Al igual que las búsquedas, el tiempo necesario para insertar un bloque aumenta de forma logarítmica a medida que se incrementa el tamaño del Blockchain.
 
-- Por otro lado, tanto la búsqueda de un usuario como la búsqueda de una transacción tienen una complejidad constante O(1), lo que significa que el tiempo necesario para realizar estas operaciones no depende del tamaño del Blockchain.
+Buscar usuario y transaccion :
+- Por otro lado, tanto la búsqueda de un usuario como la búsqueda de una transacción tienen una complejidad constante O(m), lo que significa que el tiempo necesario para realizar estas operaciones en un solo blockchain va a ser de complejidad O(m) donde "m" es la cantidad de usuarios involucrados en la transacción, sin embargo, si se busca en todos los bloques, la complejidad es O(m*n), donde "m" es el tamaño promedio de los nombres de usuario y "n" es la cantidad de bloques.
 
 El análisis de la complejidad en notación Big O nos proporciona una comprensión del rendimiento de los métodos del Blockchain en función del tamaño de los datos. Con esta información, podemos tomar decisiones informadas sobre la eficiencia y escalabilidad de nuestra aplicación transaccional basada en Blockchain.
 
 ## Tabla comparativa de Blockchain con índices vs sin índices
 
-|                     | Con índices | Sin índices |
-|---------------------|-------------|-------------|
-| Buscar bloque (id)  | O(1)        | O(n)        |
-| Buscar fecha        | O(log(n))   | O(n*k)      |
-|                     |             | Siendo “k” la media de número de transacciones en un blockchain. |
-| Buscar por rango de fechas | O(log(n)) | O(n) |
-| Insertar bloque     | O(log(n))   | O(1)        |
-| Buscar usuario      | O(1)        | O(n)        |
-| Buscar transacción  | O(1)        | O(n)        |
+|Tipo de Operacion    | Con índices       |Estructura   | Sin índices |Estructura   |
+|---------------------|-------------------|-------------|-------------|-------------|
+| Buscar bloque (id)  | O(1)              |Hash         | O(n)        | LinkedList
+| Buscar fecha        | O(log(n))         |BPTree       | O(n*k)      | LinkedList
+| Buscar por rango de fechas| O(log(n)+k) |BPTree       | O(n*m)      | LinkedList
+| Insertar bloque     | O(1)              |Hash         | O(n)        | LinkedList
+| Buscar usuario      | O(m)              |SufixTree    | O(n)        | LinkedList
+| Buscar transacción  | O(1)              |SufixTree    | O(n)        | LinkedList
 
 
 ## Conclusiones
@@ -132,7 +148,7 @@ A continuación, se muestra un resumen de las actividades realizadas por cada mi
 |--------------------------------|--------------------------------------|
 | Fabricio, Jesús, Ximena y Edgar| Investigación y estudio de problemas |
 | Fabricio, Jesús, Ximena y Edgar| Diseño y desarrollo de algoritmos    |
-| Fabricio y Jesús               | Programación y desarrollo de software| 
+| Fabricio, Jesús y Edgar        | Programación y desarrollo de software| 
 | Fabricio, Jesús, Ximena y Edgar| Análisis de datos y modelado         |
 | Fabricio, Jesús, Ximena y Edgar| Diseño de sistemas y arquitectura    |
 | Ximena y Edgar                 | Documentación y presentación         |
