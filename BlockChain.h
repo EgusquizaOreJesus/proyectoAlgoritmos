@@ -29,7 +29,35 @@ int mine( int nonce, const string& data , string challenge)
     return nonce;
 
 }
+struct Monto{
+    double monto;
+    int index_bloque;
 
+    // Sobrecarga de los operadores de comparación.
+    bool operator<(const Monto& other) const {
+        return monto < other.monto;
+    }
+
+    bool operator>(const Monto& other) const {
+        return monto > other.monto;
+    }
+
+    bool operator<=(const Monto& other) const {
+        return monto <= other.monto;
+    }
+
+    bool operator>=(const Monto& other) const {
+        return monto >= other.monto;
+    }
+
+    bool operator==(const Monto& other) const {
+        return monto == other.monto;
+    }
+
+    bool operator!=(const Monto& other) const {
+        return monto != other.monto;
+    }
+};
 struct block{
     int id;
     string data;
@@ -128,19 +156,51 @@ private:
     //ForwardList<block*> blockchain_;
     int id;
     int id_last_edited;
-
-    BPTree<double> index_on_monto;
-
-    BTree<transaccion> index_on_transaction;
+    BPTree<Monto> index_on_monto;
+    BTree<transaccion>* index_on_transaction = new BTree<transaccion>(3);
     ChainHash<int,block*> block_references;
     TriePatricia index_on_names;
+    ChainHash <string , Usuario*> usuarios;
+    vector<int> filtraos;
 
 public:
 
 
     blockchain(const vector<transaccion>& data){
         id=1;
+        for(auto particular_transaction : data)
+        {    auto instance_user1 = new Usuario(particular_transaction.emisor);
+            auto instance_user2 = new Usuario(particular_transaction.receptor);
+            if(!usuarios.contains(particular_transaction.emisor))
+            {
 
+                instance_user1->nueva_operacion(id+1);
+                usuarios.insert(make_pair(instance_user1->getNombre(),instance_user1));
+            }else usuarios[particular_transaction.emisor]->nueva_operacion(id);
+
+            if(!usuarios.contains(particular_transaction.receptor))
+            {
+
+                instance_user2->nueva_operacion(id);
+                usuarios.insert(make_pair(instance_user2->getNombre(),instance_user2));
+            }else usuarios[particular_transaction.receptor]->nueva_operacion(id);
+
+
+            if(usuarios.contains(particular_transaction.emisor) and usuarios.contains(particular_transaction.receptor))
+            {
+                usuarios[particular_transaction.emisor]->increment((-1.0)*particular_transaction.monto);
+                usuarios[particular_transaction.receptor]->increment(particular_transaction.monto);
+            }
+
+            particular_transaction.id_bloque=id;
+            index_on_transaction->insert(particular_transaction);
+            Monto prov;
+            prov.monto=particular_transaction.monto;
+            prov.index_bloque=id;
+            index_on_monto.insert(prov);
+            index_on_names.insert(particular_transaction.emisor);
+            index_on_names.insert(particular_transaction.receptor);
+        }
         auto* new_block= new block(0,data,"");
         block_references.insert(make_pair(new_block->id,new_block));
     }
@@ -154,17 +214,47 @@ public:
             block_references.insert(make_pair(block_copy->id, block_copy));
         }
     }
+
+    const ChainHash<string, Usuario *> &getUsuarios() const {
+        return usuarios;
+    }
+
     void insert_block_with_transaction(const vector<transaccion>& data){
         //block * current_block = blockchain_.front();
 
         for(auto particular_transaction : data)
-        {
-           index_on_transaction.insert(particular_transaction);
-           index_on_monto.insert(particular_transaction.monto);
+        {    auto instance_user1 = new Usuario(particular_transaction.emisor);
+            auto instance_user2 = new Usuario(particular_transaction.receptor);
+            if(!usuarios.contains(particular_transaction.emisor))
+            {
+
+                instance_user1->nueva_operacion(id);
+                usuarios.insert(make_pair(instance_user1->getNombre(),instance_user1));
+            }else usuarios[particular_transaction.emisor]->nueva_operacion(id);
+
+            if(!usuarios.contains(particular_transaction.receptor))
+            {
+
+                instance_user2->nueva_operacion(id);
+                usuarios.insert(make_pair(instance_user2->getNombre(),instance_user2));
+            }else usuarios[particular_transaction.receptor]->nueva_operacion(id);
+
+
+            if(usuarios.contains(particular_transaction.emisor) and usuarios.contains(particular_transaction.receptor))
+            {
+                usuarios[particular_transaction.emisor]->increment((-1.0)*particular_transaction.monto);
+                usuarios[particular_transaction.receptor]->increment(particular_transaction.monto);
+            }
+
+            particular_transaction.id_bloque=id;
+           index_on_transaction->insert(particular_transaction);
+           Monto prov;
+           prov.monto=particular_transaction.monto;
+           prov.index_bloque=id;
+           index_on_monto.insert(prov);
            index_on_names.insert(particular_transaction.emisor);
            index_on_names.insert(particular_transaction.receptor);
         }
-
 
         block * current_block=block_references[id++];
         auto * new_block =new block(current_block->id ,data , current_block->current_hash);
@@ -177,6 +267,10 @@ public:
         new_block2 =new block(current_block->id ,current_block->data2 , current_block->current_hash);
         block_references.insert(make_pair(id,new_block2));
 
+    }
+
+    const TriePatricia &getIndexOnNames() const {
+        return index_on_names;
     }
 
     void view_blockChain(){
@@ -199,7 +293,6 @@ public:
         }
         id_last_edited=index_b;
     }
-
     void mine_invalid_blocks(){
         block_references[id_last_edited]->self_hash();
         string current_hash = block_references[id_last_edited]->current_hash;
@@ -209,7 +302,6 @@ public:
             current_hash = block_references[i]->current_hash;
         }
     }
-
     string last_hash_code()
     {
         return block_references[id]->current_hash;
@@ -227,8 +319,6 @@ public:
         }
 
     }
-
-
     void etc(){
         cout << block_references.getsize();
     }
@@ -239,6 +329,7 @@ public:
         }
         return true;
     }
+
 //CRITERIOS DE BUSQUEDA -->Igual a X
     //IGUAL A X Devuelve transacciones que tengan un valor atomico como fecha o nombre de usuario(emisor , receptor)
     vector<transaccion> search(const string& data,eleccion a){
@@ -296,16 +387,20 @@ public:
     }
 //CRITERIOS DE BUSQUEDA Igual -->Entre X y Y
     //Obtener montos en un rango inicia; y final (USO DE B+)
-      vector<double> monto_range_search_monto(double  ini , double  end)
-    {
-        return index_on_monto.range_search(ini , end );
+      vector<Monto> monto_range_search_monto(double  ini , double  end)
+    {   Monto inicial , final;
+        inicial.monto=ini;
+        inicial.index_bloque=-1;
+        final.monto=end;
+        final.index_bloque=-1;
+        return index_on_monto.range_search(inicial , final );
     }
     //Obtener transacciones  en un rango inicia; y final (fechas , montos )
     vector<transaccion> transaction_range_search_fecha(string fecha_ini , string fecha_fin){
-        return index_on_transaction.range_searching(fecha_ini,fecha_fin);
+        return index_on_transaction->range_searching(fecha_ini,fecha_fin);
     }
     vector<transaccion> transaction_range_search_monto( double monto_ini, double monto_final){
-        return index_on_transaction.range_searching(monto_ini,monto_final);
+        return index_on_transaction->range_searching(monto_ini,monto_final);
     }
 //    vector<transaccion> transaction_range_search_transaction( const transaccion& t_ini, const transaccion& t_final){
 //        return index_on_transaction.range_searching(t_ini,t_final);
@@ -323,13 +418,20 @@ public:
     //Obtener transacciones ocurridas entre ciertas fechas
 
 //CRITERIOS DE BUSQUEDA  -->Máximo valor de
-  double max_value(){
+  Monto max_value(){
         return index_on_monto.found_max();
     }
-    double min_value(){
+    Monto min_value(){
         return index_on_monto.found_min();
     }
-//
+
+    const vector<int> &getFiltraos() const {
+        return filtraos;
+    }
+
+
+
+
 
 };
 #endif //PROYECTOALGORITMOS_BLOCKCHAIN_H

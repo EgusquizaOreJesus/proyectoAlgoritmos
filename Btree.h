@@ -29,10 +29,7 @@ private:
 
 public:
     BTree(int _M) : root(nullptr), M(_M), n(0) {}
-    BTree(){
-        M=3;
-        n=0;
-    }
+
     bool search(TK key){return search(this->root, key);};//indica si se encuentra o no un elemento
     void insert(TK key);//inserta un elemento
     void remove(TK key);//elimina un elemento

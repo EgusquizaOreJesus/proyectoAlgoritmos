@@ -3,7 +3,7 @@
 #include "iostream"
 #include <ctime>
 #include "string"
-
+#include <vector>
 using namespace std;
 
 
@@ -12,6 +12,7 @@ struct Fecha{
     int dia = int{};
     int mes = int{};
     int anio = int{};
+
     Fecha(){}
     Fecha(int d, int m, int a): dia(d), mes(m), anio(a){}
     Fecha(const Fecha& other){
@@ -32,9 +33,12 @@ struct transaccion
     std::string emisor;
     std::string receptor;
     Fecha fechatransaccion;
+    int id_bloque=int{};
     transaccion(){
         monto = double{};
     }
+
+    void setIdBloque(int idBloque);
 
     explicit transaccion(double monto_, std::string e, std::string r, int d,int m, int a): fechatransaccion(d, m, a)
     {
@@ -332,6 +336,10 @@ ostream& operator<<(ostream &os, const transaccion &other1) {
     return os;
 }
 
+void transaccion::setIdBloque(int idBloque) {
+    id_bloque = idBloque;
+}
+
 struct comparador{
     static bool igualdad(const transaccion &A, const transaccion &B){
         if (A.fechatransaccion.anio == B.fechatransaccion.anio && A.fechatransaccion.mes == B.fechatransaccion.mes && A.fechatransaccion.dia == B.fechatransaccion.dia){
@@ -593,8 +601,46 @@ struct comparador{
     }
 };
 
+class Usuario{
+private:
+    string nombre;
+    double ganancias=5000;
+    vector<int> bloque_id;
+
+public:
+    Usuario(const string &nombre) : nombre(nombre){}
+
+    void nueva_operacion(int index_bloque)
+    {
+        bloque_id.push_back(index_bloque);
+    }
+
+    const string &getNombre() const {
+        return nombre;
+    }
+
+    double getGanancias() const {
+        return ganancias;
+    }
+
+    const vector<int> &getBloqueId() const {
+        return bloque_id;
+    }
+
+    void setNombre(const string &nombre) {
+        Usuario::nombre = nombre;
+    }
+
+    void setGanancias(double ganancias) {
+        Usuario::ganancias = ganancias;
+    }
 
 
+
+    void increment(double montos){
+        ganancias+=montos;
+    }
+};
 
 
 

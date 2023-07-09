@@ -36,16 +36,17 @@ private:
             TriePatricia(){
                 root = new TrieNode();
             }
-            void insert( const string& new_word  ) {
-                int idx= get_index(new_word);
-                insert(new_word,0,root->children[idx]);
-            }
-            void insert(string new_word , int posF , TrieNode* &current){
-                if(current== nullptr)
-                {
-                    current= new TrieNode(new_word);
+    void insert( const string& new_word  ) {
+        int idx= get_index(new_word);
+        insert(new_word,0,root->children[idx]);
+    }
+
+    void insert(string new_word , int posF , TrieNode* &current){
+        if(current== nullptr)
+        {
+            current= new TrieNode(new_word);
             current->end_of_word= true;
-        }else{
+        } else {
             int i=posF;
             int m=int(new_word.size()); // tam de la nueva palabra
             while (i<m or i<current->suffix.size())
@@ -79,12 +80,10 @@ private:
             if(!new_excess.empty())
             {
                 insert(new_excess,0,current->children[get_index(new_excess)]);
-
             }
-            if (new_excess.empty() && (old_excess.empty() || !current->end_of_word))
+            if (new_excess.empty())
                 current->end_of_word = true;
         }
-
     }
     bool search(string key) {
         return search(std::move(key) , root);
@@ -119,7 +118,7 @@ private:
     }
 
 
-      vector<string >search_start_with(const string & empieza){
+      vector<string>search_start_with(const string & empieza){
                 bool  to_erase_later= false;
                 if(!search(empieza))
                 {
@@ -128,20 +127,21 @@ private:
                 }
 
                 auto * guia = new TrieNode;
+
                 search_support(empieza,root , guia);
                 vector<string > coincidences;
                 string parent= empieza.substr(0,empieza.size()-guia->suffix.size());
                 toString_support("", guia, parent , coincidences);
 
-
                 if(to_erase_later)
                 {
                     remove(empieza);
-                    coincidences.pop_back();
+                    coincidences.erase(coincidences.begin());
                     return coincidences;
                 }else{
                     return coincidences;
                 }
+
             }
 
     void search_support(string key , TrieNode* current , TrieNode* & guia ) {
@@ -172,12 +172,13 @@ private:
         string new_word;
         if (current->end_of_word) {
             new_word += parent + current->suffix+sep;
+
             cosas.push_back(new_word);
         }
         for (int i = 0; i < ALPHA_SIZE; ++i) {
             if (current->children[i] != nullptr) {
 
-                toString(sep, current->children[i], parent + current->suffix);
+                toString_support(sep, current->children[i], parent + current->suffix,cosas);
             }
         }
 
