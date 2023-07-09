@@ -1,8 +1,7 @@
 #include <iostream>
 #include "transaccion.h"
 #include "BlockChain.h"
-#include "Btree.h"
-//#include "BPPtree.h"
+
 #include "patricia.h"
 #include "boyer.h"
 using namespace std;
@@ -14,11 +13,10 @@ int main() {
     transaccion a(100,"jesus","chavez",20,10,2022);
     transaccion b(200,"chambilla","chavez",21,10,2022);
     transaccion c(300,"mai","hermes",22,10,2022);
-    transaccion  d(400,"miguel","chavez",30,10,2022);
+    transaccion d(400,"miguel","chavez",30,10,2022);
     transaccion e(500,"pedro","chavez",24,10,2022);
-    transaccion f(150,"chanchumaru","heider",25,10,2022);
-    transaccion g(700,"joaquin","hitler",26,10,2022);
-
+    transaccion f(150,"chanchumaru","heider",20,10,2022);
+    transaccion g(700,"joaquin","hitlerto",26,10,2022);
     total.push_back(a);
     total.push_back(b);
     total.push_back(c);
@@ -26,6 +24,9 @@ int main() {
     total.push_back(e);
     total.push_back(f);
     total.push_back(g);
+
+//
+
     vector<transaccion> trans2{a,c,f};
     vector<transaccion> trans3{a,b,c,d};
     vector<transaccion> trans4{a,b,c,g};
@@ -38,10 +39,18 @@ int main() {
         alfa.insert_block_with_transaction(trans3);
         alfa.insert_block_with_transaction(trans4);
 
-      alfa.view_blockChain();
-        auto pera = alfa.getUsuarios();
+        auto losuser = alfa.contains("e");//constains
+        for(auto p:losuser)
+            cout<<p<<endl;
+        cout<<endl;
+    auto losuser2 = alfa.start_with("ch");//start with
+    for(auto p:losuser2)
+        cout<<p<<endl;
 
-//    BPTree<Monto> montos;
+    cout<<"MAXIMO:"<<alfa.max_value().monto<<endl;
+    cout<<"MINIMO:"<<alfa.min_value().monto<<endl;
+//
+////    BPTree<Monto> montos;
 //    for(auto v:total )
 //    {
 //        Monto nuevo;

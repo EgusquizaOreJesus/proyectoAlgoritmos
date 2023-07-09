@@ -164,11 +164,19 @@ private:
     vector<int> filtraos;
 
 public:
+    blockchain(const blockchain& other) {
+        // cout<<"USANDO CONSTRUCT COPIA"<<endl;
+        id = other.id;
 
-
-    blockchain(const vector<transaccion>& data){
+        for (int i = 1; i <= id; ++i) {
+            auto nuevo= other.block_references[i];
+            auto* block_copy = new block(*nuevo);
+            block_references.insert(make_pair(block_copy->id, block_copy));
+        }
+    }
+    blockchain( vector<transaccion>& data){
         id=1;
-        for(auto particular_transaction : data)
+        for(auto& particular_transaction : data)
         {    auto instance_user1 = new Usuario(particular_transaction.emisor);
             auto instance_user2 = new Usuario(particular_transaction.receptor);
             if(!usuarios.contains(particular_transaction.emisor))
@@ -192,7 +200,7 @@ public:
                 usuarios[particular_transaction.receptor]->increment(particular_transaction.monto);
             }
 
-            particular_transaction.id_bloque=id;
+            particular_transaction.setIdBloque(id);
             index_on_transaction->insert(particular_transaction);
             Monto prov;
             prov.monto=particular_transaction.monto;
@@ -204,40 +212,25 @@ public:
         auto* new_block= new block(0,data,"");
         block_references.insert(make_pair(new_block->id,new_block));
     }
-    blockchain(const blockchain& other) {
-        // cout<<"USANDO CONSTRUCT COPIA"<<endl;
-        id = other.id;
-
-        for (int i = 1; i <= id; ++i) {
-            auto nuevo= other.block_references[i];
-            auto* block_copy = new block(*nuevo);
-            block_references.insert(make_pair(block_copy->id, block_copy));
-        }
-    }
-
-    const ChainHash<string, Usuario *> &getUsuarios() const {
-        return usuarios;
-    }
-
-    void insert_block_with_transaction(const vector<transaccion>& data){
+    void insert_block_with_transaction( vector<transaccion>& data){
         //block * current_block = blockchain_.front();
 
-        for(auto particular_transaction : data)
+        for(auto& particular_transaction : data)
         {    auto instance_user1 = new Usuario(particular_transaction.emisor);
             auto instance_user2 = new Usuario(particular_transaction.receptor);
             if(!usuarios.contains(particular_transaction.emisor))
             {
 
-                instance_user1->nueva_operacion(id);
+                instance_user1->nueva_operacion(id+1);
                 usuarios.insert(make_pair(instance_user1->getNombre(),instance_user1));
-            }else usuarios[particular_transaction.emisor]->nueva_operacion(id);
+            }else usuarios[particular_transaction.emisor]->nueva_operacion(id+1);
 
             if(!usuarios.contains(particular_transaction.receptor))
             {
 
-                instance_user2->nueva_operacion(id);
+                instance_user2->nueva_operacion(id+1);
                 usuarios.insert(make_pair(instance_user2->getNombre(),instance_user2));
-            }else usuarios[particular_transaction.receptor]->nueva_operacion(id);
+            }else usuarios[particular_transaction.receptor]->nueva_operacion(id+1);
 
 
             if(usuarios.contains(particular_transaction.emisor) and usuarios.contains(particular_transaction.receptor))
@@ -246,7 +239,8 @@ public:
                 usuarios[particular_transaction.receptor]->increment(particular_transaction.monto);
             }
 
-            particular_transaction.id_bloque=id;
+            particular_transaction.setIdBloque(id+1);
+
            index_on_transaction->insert(particular_transaction);
            Monto prov;
            prov.monto=particular_transaction.monto;
@@ -269,10 +263,13 @@ public:
 
     }
 
+
     const TriePatricia &getIndexOnNames() const {
         return index_on_names;
     }
-
+    const ChainHash<string, Usuario *> &getUsuarios() const {
+        return usuarios;
+    }
     void view_blockChain(){
         for (int i = 1; i <= id; ++i)
             block_references[i]->printblock();

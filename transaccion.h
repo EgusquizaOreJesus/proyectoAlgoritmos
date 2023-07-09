@@ -8,6 +8,7 @@ using namespace std;
 
 
 
+
 struct Fecha{
     int dia = int{};
     int mes = int{};
@@ -19,6 +20,14 @@ struct Fecha{
         dia = other.dia;
         mes = other.mes;
         anio = other.anio;
+    }
+    Fecha& operator=(const Fecha& other) {
+        if (this != &other) {
+            dia = other.dia;
+            mes = other.mes;
+            anio = other.anio;
+        }
+        return *this;
     }
 };
 enum eleccion{
@@ -33,12 +42,15 @@ struct transaccion
     std::string emisor;
     std::string receptor;
     Fecha fechatransaccion;
-    int id_bloque=int{};
+    int id_bloque;
     transaccion(){
         monto = double{};
     }
 
-    void setIdBloque(int idBloque);
+    void setIdBloque(int idBloque)
+    {
+        id_bloque=idBloque;
+    }
 
     explicit transaccion(double monto_, std::string e, std::string r, int d,int m, int a): fechatransaccion(d, m, a)
     {
@@ -46,11 +58,15 @@ struct transaccion
         emisor = std::move(e);
         receptor = std::move(r);
     };
+
+    int getIdBloque() const;
+
     transaccion(const transaccion& other) {
         monto = other.monto;
         emisor = other.emisor;
         receptor = other.receptor;
         fechatransaccion = other.fechatransaccion;
+        id_bloque=other.id_bloque;
     }
     void display() const{
         string result;
@@ -60,13 +76,16 @@ struct transaccion
         cout << "FECHA: " << fechatransaccion.dia << "/"<<fechatransaccion.mes << "/"<<fechatransaccion.anio << endl;
     }
     transaccion& operator=(const transaccion& other){
-        if (this == &other){return *this;}
-        // Ya una vez verificado que no son la misma direccion. hago el mismo proceso que el constructor
-        monto = other.monto;
-        emisor = other.emisor;
-        receptor = other.receptor;
-        fechatransaccion = other.fechatransaccion;
+        if (this != &other){
+            monto = other.monto;
+            emisor = other.emisor;
+            receptor = other.receptor;
+            fechatransaccion = other.fechatransaccion;
+            id_bloque = other.id_bloque;
+        }
+        return *this;
     }
+
     friend bool operator<(const transaccion& other1,const transaccion& other2);
     friend bool operator<(const string& fecha_,const transaccion& other2);
     friend bool operator>(const string& fecha_,const transaccion& other2);
@@ -79,18 +98,6 @@ struct transaccion
 
     friend ostream& operator<<(ostream& os,const transaccion& other1);
 
-};
-struct fecha{
-    int dia = int{};
-    int mes = int{};
-    int anio = int{};
-    fecha(){}
-    fecha(int d,int m,int a):dia(d),mes(m),anio(a){}
-    fecha(const fecha& other){
-        dia = other.dia;
-        mes = other.mes;
-        anio = other.anio;
-    }
 };
 
 bool operator<=(const transaccion &other2,const string& fecha_) {
@@ -336,8 +343,9 @@ ostream& operator<<(ostream &os, const transaccion &other1) {
     return os;
 }
 
-void transaccion::setIdBloque(int idBloque) {
-    id_bloque = idBloque;
+
+int transaccion::getIdBloque() const {
+    return id_bloque;
 }
 
 struct comparador{
@@ -363,7 +371,7 @@ struct comparador{
         }
         return false;
     }
-    static bool igualdad(const fecha &A, const transaccion &B){
+    static bool igualdad(const Fecha &A, const transaccion &B){
 
         if (A.anio == B.fechatransaccion.anio && A.mes == B.fechatransaccion.mes && A.dia == B.fechatransaccion.dia){
             return true;
