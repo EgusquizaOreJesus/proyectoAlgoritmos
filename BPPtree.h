@@ -4,7 +4,7 @@
 #include "stack"
 #include "vector"
 using namespace std;
-int MAX_SIZE = 3;
+int MAX_SIZE_Bp = 3;
 
 
 template<typename T>
@@ -21,8 +21,8 @@ class BPTree {
 
         NodeBptree() {
             IS_LEAF = false;
-            key = new T[MAX_SIZE];
-            ptr = new NodeBptree *[MAX_SIZE + 1];
+            key = new T[MAX_SIZE_Bp];
+            ptr = new NodeBptree *[MAX_SIZE_Bp + 1];
         }
 
         ~NodeBptree() {
@@ -167,7 +167,7 @@ void BPTree<T>::insert(T value) {
             }
         }
         ///caso donde aun queda espacio para insertar
-        if (cursor->size < MAX_SIZE) {
+        if (cursor->size < MAX_SIZE_Bp) {
             int i = 0;
             //busqueda de posicion
             while (value > cursor->key[i] && i < cursor->size)
@@ -183,25 +183,25 @@ void BPTree<T>::insert(T value) {
         } else {    /// caso donde el nodo esta lleno
             ///se crea un nodo temporal para poder hacer la division
             NodeBptree *newLeaf = new NodeBptree;
-            T virtualNode[MAX_SIZE + 1];
+            T virtualNode[MAX_SIZE_Bp + 1];
 
-            for (int i = 0; i < MAX_SIZE; i++) {
+            for (int i = 0; i < MAX_SIZE_Bp; i++) {
                 virtualNode[i] = cursor->key[i];
             }
             int i = 0, j;
-            while (value > virtualNode[i] && i < MAX_SIZE)
+            while (value > virtualNode[i] && i < MAX_SIZE_Bp)
                 i++;
-            for (int k = MAX_SIZE + 1; k > i; k--) {
+            for (int k = MAX_SIZE_Bp + 1; k > i; k--) {
                 virtualNode[k] = virtualNode[k - 1];
             }
             virtualNode[i] = value;
             ///construccion de la nueva hoja
             newLeaf->IS_LEAF = true;
-            cursor->size = (MAX_SIZE + 1) / 2;                   /////!!!!!!!!!! declaracion de pesos
-            newLeaf->size = MAX_SIZE + 1 - (MAX_SIZE + 1)/2;     ////// en este caso se deja con menor numero de datos al de la izquierda y con mayor a la derecha
+            cursor->size = (MAX_SIZE_Bp + 1) / 2;                   /////!!!!!!!!!! declaracion de pesos
+            newLeaf->size = MAX_SIZE_Bp + 1 - (MAX_SIZE_Bp + 1)/2;     ////// en este caso se deja con menor numero de datos al de la izquierda y con mayor a la derecha
             cursor->ptr[cursor->size] = newLeaf;
-            newLeaf->ptr[newLeaf->size] = cursor->ptr[MAX_SIZE]; /// establece los ultimos punteros a null
-            cursor->ptr[MAX_SIZE] = nullptr;
+            newLeaf->ptr[newLeaf->size] = cursor->ptr[MAX_SIZE_Bp]; /// establece los ultimos punteros a null
+            cursor->ptr[MAX_SIZE_Bp] = nullptr;
 
             ///asignacion de los valores a los nodos reales
             for (i = 0; i < cursor->size; i++) {
@@ -229,7 +229,7 @@ void BPTree<T>::insert(T value) {
 
 template<typename T>
 void BPTree<T>::insertInternal(T value, NodeBptree *cursor, NodeBptree *child) {
-    if (cursor->size < MAX_SIZE) {
+    if (cursor->size < MAX_SIZE_Bp) {
         int i = 0;
         //busqueda de posicion a insertar el valor
         while (value > cursor->key[i] && i < cursor->size)
@@ -247,33 +247,33 @@ void BPTree<T>::insertInternal(T value, NodeBptree *cursor, NodeBptree *child) {
         cursor->ptr[i + 1] = child;
     } else {
         auto *newInternal = new NodeBptree;
-        T virtualKey[MAX_SIZE + 1];
-        NodeBptree *virtualPtr[MAX_SIZE + 2];
+        T virtualKey[MAX_SIZE_Bp + 1];
+        NodeBptree *virtualPtr[MAX_SIZE_Bp + 2];
         //copia de los valores de los punteros del nodo
-        for (int i = 0; i < MAX_SIZE; i++) {
+        for (int i = 0; i < MAX_SIZE_Bp; i++) {
             virtualKey[i] = cursor->key[i];
         }
         //copia de los valores de los punteros
-        for (int i = 0; i < MAX_SIZE + 1; i++) {
+        for (int i = 0; i < MAX_SIZE_Bp + 1; i++) {
             virtualPtr[i] = cursor->ptr[i];
         }
         int i = 0, j;
         //se busca la posicion del valor en el nodo
-        while (value > virtualKey[i] && i < MAX_SIZE)
+        while (value > virtualKey[i] && i < MAX_SIZE_Bp)
             i++;
         //se realiza el desplazamiento de los valores del nodo
-        for (int k = MAX_SIZE + 1; k > i; k--) {
+        for (int k = MAX_SIZE_Bp + 1; k > i; k--) {
             virtualKey[k] = virtualKey[k - 1];
         }
         virtualKey[i] = value;
         //se realiza el deplazamiento de los punteros del nodo
-        for (int k = MAX_SIZE + 2; k > i + 1; k--) {
+        for (int k = MAX_SIZE_Bp + 2; k > i + 1; k--) {
             virtualPtr[k] = virtualPtr[k - 1];
         }
         virtualPtr[i + 1] = child;
         newInternal->IS_LEAF = false;
-        cursor->size = (MAX_SIZE + 1) / 2; /// division de los tamanios ¸
-        newInternal->size = MAX_SIZE - (MAX_SIZE + 1) / 2; /// division de los tamanios ¸
+        cursor->size = (MAX_SIZE_Bp + 1) / 2; /// division de los tamanios ¸
+        newInternal->size = MAX_SIZE_Bp - (MAX_SIZE_Bp + 1) / 2; /// division de los tamanios ¸
         //inserta los valores de la mitad correspondiente al nuevo nodo
         for (i = 0, j = cursor->size + 1; i < newInternal->size; i++, j++) {
             newInternal->key[i] = virtualKey[j];
@@ -389,7 +389,7 @@ void BPTree<T>::remove(T value) {
         temp->size--;
         //caso donde solo se tiene el 1 nodo
         if (temp == root) {
-            for (int i = 0; i < MAX_SIZE + 1; i++) {
+            for (int i = 0; i < MAX_SIZE_Bp + 1; i++) {
                 temp->ptr[i] = nullptr;
             }
             if (temp->size == 0) {// caso donde solo se tenie un elemento y se destruye el arbol
@@ -403,12 +403,12 @@ void BPTree<T>::remove(T value) {
         }
         temp->ptr[temp->size] = temp->ptr[temp->size + 1];  // se disminuye el valor del puntero y se guarda el valor
         temp->ptr[temp->size + 1] = nullptr;    // el valor eleminado se vuele nullptr
-        if (temp->size >= (MAX_SIZE + 1) / 2) {    // si el tamano del nodo eliminado es mayor a la condicion se acaba el delete
+        if (temp->size >= (MAX_SIZE_Bp + 1) / 2) {    // si el tamano del nodo eliminado es mayor a la condicion se acaba el delete
             return;
         }   // caso contrario se tiene que preguntar si el hermano del costado nos puede prestar
         if (leftSibling >= 0) {
             NodeBptree *leftNode = parent->ptr[leftSibling];
-            if (leftNode->size >= (MAX_SIZE + 1) / 2 + 1) { // se realiza el prestamo de valores y actualizaciion de los punteros y valores en el nodo padre
+            if (leftNode->size >= (MAX_SIZE_Bp + 1) / 2 + 1) { // se realiza el prestamo de valores y actualizaciion de los punteros y valores en el nodo padre
                 for (int i = temp->size; i > 0; i--) {
                     temp->key[i] = temp->key[i - 1];
                 }
@@ -425,7 +425,7 @@ void BPTree<T>::remove(T value) {
         }   // caso donde el de la izquierda no nos puede prestar
         if (rightSibling <= parent->size) {
             NodeBptree *rightNode = parent->ptr[rightSibling];
-            if (rightNode->size >= (MAX_SIZE + 1) / 2 + 1) { // se realiza el prestamo de valores y actualizaciion de los punteros y valores en el nodo padre
+            if (rightNode->size >= (MAX_SIZE_Bp + 1) / 2 + 1) { // se realiza el prestamo de valores y actualizaciion de los punteros y valores en el nodo padre
                 temp->size++;
                 temp->ptr[temp->size] = temp->ptr[temp->size - 1];
                 temp->ptr[temp->size - 1] = nullptr;
@@ -519,7 +519,7 @@ void BPTree<T>::removeInternal(T value, NodeBptree *temp, NodeBptree *child) {
     temp->size--;
 
     /// Si el tamaño del nodo 'temp' es mayor o igual a la mitad de la capacidad permitida, se termina la eliminación
-    if (temp->size >= (MAX_SIZE + 1) / 2 - 1) {
+    if (temp->size >= (MAX_SIZE_Bp + 1) / 2 - 1) {
         return;
     }
     if (temp == root)
@@ -539,7 +539,7 @@ void BPTree<T>::removeInternal(T value, NodeBptree *temp, NodeBptree *child) {
     /// Si el hermano izquierdo puede prestar valores
     if (leftSibling >= 0) {
         NodeBptree *leftNode = parent->ptr[leftSibling];
-        if (leftNode->size >= (MAX_SIZE + 1) / 2) {
+        if (leftNode->size >= (MAX_SIZE_Bp + 1) / 2) {
             /// Realiza el préstamo de valores y actualización de punteros y valores en el nodo padre
             for (int i = temp->size; i > 0; i--) {
                 temp->key[i] = temp->key[i - 1];
@@ -559,7 +559,7 @@ void BPTree<T>::removeInternal(T value, NodeBptree *temp, NodeBptree *child) {
     /// Si el hermano derecho puede prestar valores
     if (rightSibling <= parent->size) {
         NodeBptree *rightNode = parent->ptr[rightSibling];
-        if (rightNode->size >= (MAX_SIZE + 1) / 2) {
+        if (rightNode->size >= (MAX_SIZE_Bp + 1) / 2) {
             // Realiza el préstamo de valores y actualización de punteros y valores en el nodo padre
             temp->key[temp->size] = parent->key[pos];
             parent->key[pos] = rightNode->key[0];

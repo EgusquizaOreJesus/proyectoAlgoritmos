@@ -5,6 +5,8 @@
 #ifndef PROYECTOALGORITMOS_NODE_H
 #define PROYECTOALGORITMOS_NODE_H
 #include <iostream>
+#include "transaccion.h"
+#include "vector"
 using namespace std;
 
 template <typename TK>

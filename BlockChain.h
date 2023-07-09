@@ -9,6 +9,9 @@
 #include "ForwardList.h"
 #include "ChainHash.h"
 #include "transaccion.h"
+#include "BPPtree.h"
+#include "Btree.h"
+#include "patricia.h"
 
 int mine( int nonce, const string& data , string challenge)
 {
@@ -35,6 +38,7 @@ struct block{
     string  current_hash;
     int nonce;
     string signature_string="0000";
+    bool valido;
     block(){}
     explicit block(int previd , const vector<transaccion>& datos, const string& previo){
         string algo=string (64, '0');
@@ -71,6 +75,13 @@ struct block{
         current_hash= sha256(data+prev_hash+ to_string(nonce));
     }
 
+
+
+    void self_hash_invalido() {
+
+        current_hash = sha256(data + prev_hash);
+    }
+
     void setPrevHash(const string &prevHash) {
         prev_hash = prevHash;
     }
@@ -92,7 +103,12 @@ struct block{
             }
         }
     }
+    bool getValido()
+    {
 
+        valido =current_hash.substr(0,4)=="0000";
+        return valido;
+    }
     void printblock(){
         cout<<"ID :"<<id<<endl;
         cout<<"NONCE :"<<nonce<<endl;
@@ -101,6 +117,7 @@ struct block{
         cout<<endl;
         cout<<"PREV_HASH :"<<prev_hash<<endl;
         cout<<"CURRENT_HASH :"<<current_hash<<endl;
+        cout<<"VALIDO "<<boolalpha<<getValido()<<endl;
         cout<<endl;
     }
 
@@ -110,11 +127,20 @@ class blockchain{
 private:
     //ForwardList<block*> blockchain_;
     int id;
+    int id_last_edited;
+
+    BPTree<double> index_on_monto;
+
+    BTree<transaccion> index_on_transaction;
     ChainHash<int,block*> block_references;
+    TriePatricia index_on_names;
 
 public:
+
+
     blockchain(const vector<transaccion>& data){
         id=1;
+
         auto* new_block= new block(0,data,"");
         block_references.insert(make_pair(new_block->id,new_block));
     }
@@ -130,6 +156,16 @@ public:
     }
     void insert_block_with_transaction(const vector<transaccion>& data){
         //block * current_block = blockchain_.front();
+
+        for(auto particular_transaction : data)
+        {
+           index_on_transaction.insert(particular_transaction);
+           index_on_monto.insert(particular_transaction.monto);
+           index_on_names.insert(particular_transaction.emisor);
+           index_on_names.insert(particular_transaction.receptor);
+        }
+
+
         block * current_block=block_references[id++];
         auto * new_block =new block(current_block->id ,data , current_block->current_hash);
         block_references.insert(make_pair(new_block->id,new_block));
@@ -141,27 +177,39 @@ public:
         new_block2 =new block(current_block->id ,current_block->data2 , current_block->current_hash);
         block_references.insert(make_pair(id,new_block2));
 
-
-
     }
 
     void view_blockChain(){
         for (int i = 1; i <= id; ++i)
             block_references[i]->printblock();
     }
-
+    [[nodiscard]] int get_id() const{
+        return id;
+    }
     template<typename T>
     void edit_block(int index_b , int index_t ,const T& dato ,bool emisor = false){
         block_references[index_b]->edit_transaction(index_t,dato,emisor);
 //        block_references[index_b]=std::move(dato);
-        block_references[index_b]->self_hash();
+        block_references[index_b]->self_hash_invalido();
         string current_hash = block_references[index_b]->current_hash;
         for (int i = index_b+1; i <= id ; ++i) {
+            block_references[i]->prev_hash = current_hash;
+            block_references[i]->self_hash_invalido();
+            current_hash = block_references[i]->current_hash;
+        }
+        id_last_edited=index_b;
+    }
+
+    void mine_invalid_blocks(){
+        block_references[id_last_edited]->self_hash();
+        string current_hash = block_references[id_last_edited]->current_hash;
+        for (int i = id_last_edited+1; i <= id ; ++i) {
             block_references[i]->prev_hash = current_hash;
             block_references[i]->self_hash();
             current_hash = block_references[i]->current_hash;
         }
     }
+
     string last_hash_code()
     {
         return block_references[id]->current_hash;
@@ -179,6 +227,8 @@ public:
         }
 
     }
+
+
     void etc(){
         cout << block_references.getsize();
     }
@@ -189,7 +239,8 @@ public:
         }
         return true;
     }
-
+//CRITERIOS DE BUSQUEDA -->Igual a X
+    //IGUAL A X Devuelve transacciones que tengan un valor atomico como fecha o nombre de usuario(emisor , receptor)
     vector<transaccion> search(const string& data,eleccion a){
         vector<transaccion> result;
         for (int i = 1; i <= this->block_references.getsize(); ++i) {
@@ -215,7 +266,7 @@ public:
         return result;
 
     }
-
+//IGUAL A X Devuelve transacciones que tengan un valor atomico como monto
     vector<transaccion> search(double data){
         vector<transaccion> result;
         for (int i = 1; i <= this->block_references.getsize(); ++i) {
@@ -228,7 +279,7 @@ public:
         return result;
 
     }
-
+//IGUAL A X Devuelve transacciones que tengan un valor atomico como monto en un bloque especifico
     vector<transaccion> search(double data,int index){
         vector<transaccion> result;
         if (isblock(index)){
@@ -243,6 +294,42 @@ public:
     int getLastBlockId(){
         return id;
     }
+//CRITERIOS DE BUSQUEDA Igual -->Entre X y Y
+    //Obtener montos en un rango inicia; y final (USO DE B+)
+      vector<double> monto_range_search_monto(double  ini , double  end)
+    {
+        return index_on_monto.range_search(ini , end );
+    }
+    //Obtener transacciones  en un rango inicia; y final (fechas , montos )
+    vector<transaccion> transaction_range_search_fecha(string fecha_ini , string fecha_fin){
+        return index_on_transaction.range_searching(fecha_ini,fecha_fin);
+    }
+    vector<transaccion> transaction_range_search_monto( double monto_ini, double monto_final){
+        return index_on_transaction.range_searching(monto_ini,monto_final);
+    }
+//    vector<transaccion> transaction_range_search_transaction( const transaccion& t_ini, const transaccion& t_final){
+//        return index_on_transaction.range_searching(t_ini,t_final);
+//    }
+//CRITERIOS DE BUSQUEDA Igual -->Inicia con
+   vector<string> start_with(const string & start)
+    {
+        return index_on_names.search_start_with(start);
+    }
+    //CRITERIOS DE BUSQUEDA Igual -->Esta contenido en
+    vector<string > contains(const string& pattern)
+    {
+        return index_on_names.contains(pattern);
+    }
+    //Obtener transacciones ocurridas entre ciertas fechas
+
+//CRITERIOS DE BUSQUEDA  -->Máximo valor de
+  double max_value(){
+        return index_on_monto.found_max();
+    }
+    double min_value(){
+        return index_on_monto.found_min();
+    }
+//
 
 };
 #endif //PROYECTOALGORITMOS_BLOCKCHAIN_H
