@@ -161,7 +161,7 @@ private:
     ChainHash<int,block*> block_references;
     TriePatricia index_on_names;
     ChainHash <string , Usuario*> usuarios;
-    vector<int> filtraos;
+    vector<int> filtrados;
 
 public:
     blockchain(const blockchain& other) {
@@ -182,7 +182,7 @@ public:
             if(!usuarios.contains(particular_transaction.emisor))
             {
 
-                instance_user1->nueva_operacion(id+1);
+                instance_user1->nueva_operacion(id);
                 usuarios.insert(make_pair(instance_user1->getNombre(),instance_user1));
             }else usuarios[particular_transaction.emisor]->nueva_operacion(id);
 
@@ -421,12 +421,131 @@ public:
     Monto min_value(){
         return index_on_monto.found_min();
     }
+    enum CriterioBusqueda {
+        IgualA_X_String = 1,
+        IgualA_X_Double,
+        IgualA_X_Double_Bloque,
+        RangoMonto,
+        RangoFechaTransaccion,
+        RangoMontoTransaccion,
+        IniciaCon,
+        ContenidoEn,
+        MaximoValor,
+        MinimoValor,
+        // agregar otros criterios según sea necesario...
+    };
 
-    const vector<int> &getFiltraos() const {
-        return filtraos;
+    static vector<int> get_block_id_from_transaction(const vector<transaccion>& filtrados)
+    {  vector<int> ids;
+         for(auto t:filtrados)
+             ids.push_back(t.getIdBloque());
+        return ids;
+    }
+    static vector<int> get_block_id_from_monto(const vector<Monto>& filtrados)
+    {  vector<int> ids;
+        for(auto t:filtrados)
+            ids.push_back(t.index_bloque);
+        return ids;
     }
 
+    vector<int> get_block_id_from_user(const vector<string>& filtros)
+    {
+        vector<int> ids;
+        vector<bool> vistos(id, false);
+        cout<<id<<endl;
+        for(auto t:filtros)
+        {
+            cout<<usuarios[t]->getNombre()<<endl;
 
+            for(auto ide:usuarios[t]->getBloqueId())
+            {
+                if(!vistos[ide-1])
+                {  cout<<ide<<endl;
+                      ids.push_back(ide);
+                    vistos[ide-1]= true;
+                }
+
+
+            }
+
+        }
+
+        return ids;
+    }
+
+    vector<int> getFiltrados(CriterioBusqueda criterio, const string& str_data = "", double dbl_data = 0, eleccion elec = emisor, double ini = 0, double end = 0, int index = -1)  {
+        vector<int> ids;  // vector para guardar los ids de los bloques
+
+        switch (criterio) {
+            case CriterioBusqueda::IgualA_X_String:
+            {
+                auto result = search(str_data, elec);
+                ids= get_block_id_from_transaction(result);
+            }
+                break;
+            case CriterioBusqueda::IgualA_X_Double:
+            {
+                auto result = search(dbl_data);
+                ids= get_block_id_from_transaction(result);
+            }
+                break;
+            case CriterioBusqueda::IgualA_X_Double_Bloque:
+            {
+                auto result = search(dbl_data, index);
+                ids= get_block_id_from_transaction(result);
+            }
+                break;
+            case CriterioBusqueda::RangoMonto:
+            {
+                auto result = monto_range_search_monto(ini, end);
+                ids=get_block_id_from_monto(result);
+            }
+                break;
+            case CriterioBusqueda::RangoFechaTransaccion:
+            {
+                auto result = transaction_range_search_fecha(str_data, str_data);
+                ids= get_block_id_from_transaction(result);
+            }
+                break;
+            case CriterioBusqueda::RangoMontoTransaccion:
+            {
+                auto result = transaction_range_search_monto(ini, end);
+                ids= get_block_id_from_transaction(result);
+            }
+                break;
+            case CriterioBusqueda::IniciaCon:
+            {
+                auto result = start_with(str_data);
+               ids= get_block_id_from_user(result);
+            }
+                break;
+            case CriterioBusqueda::ContenidoEn:
+            {
+                auto result = contains(str_data);
+                ids= get_block_id_from_user(result);
+            }
+                break;
+            case CriterioBusqueda::MaximoValor:
+            {
+                auto result = max_value();
+                ids.push_back(result.index_bloque);
+            }
+                break;
+            case CriterioBusqueda::MinimoValor:
+            {
+                auto result = min_value();
+                  ids.push_back(result.index_bloque);
+            }
+                break;
+
+            default:
+
+                break;
+        }
+
+
+        return ids;
+    }
 
 
 

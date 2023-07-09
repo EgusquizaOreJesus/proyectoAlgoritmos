@@ -39,16 +39,15 @@ int main() {
         alfa.insert_block_with_transaction(trans3);
         alfa.insert_block_with_transaction(trans4);
 
-        auto losuser = alfa.contains("e");//constains
-        for(auto p:losuser)
-            cout<<p<<endl;
-        cout<<endl;
-    auto losuser2 = alfa.start_with("ch");//start with
-    for(auto p:losuser2)
-        cout<<p<<endl;
 
-    cout<<"MAXIMO:"<<alfa.max_value().monto<<endl;
-    cout<<"MINIMO:"<<alfa.min_value().monto<<endl;
+
+
+
+//
+//    cout<<"MAXIMO:"<<alfa.max_value().monto<<endl;
+//    cout<<"MINIMO:"<<alfa.min_value().monto<<endl;
+
+
 //
 ////    BPTree<Monto> montos;
 //    for(auto v:total )
