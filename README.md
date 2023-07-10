@@ -70,7 +70,7 @@ Se están utilizando cuatro estructuras de datos con el objetivo de almacenar in
    - Objetivo: Poder realizar consultas de tipo fecha eficientemente.
 4. **B+ Tree:**
    - Indexamos montos, para encontrar el máximo y el mínimo.
-   - Objetivo: La transaccion y el bloque donde ha encurrido una operación con un monto máximo o mínimo
+   - Objetivo: Encontrar la transaccion y el bloque donde ha encurrido una operación con un monto máximo o mínimo
 5. **Patricia Tree**
    - Se utiliza para indexar los nombres de los usuarios vinculados en las transacciones.
    - Utilizado para realizar búsquedas rápidas de patrones en una transaccion.
