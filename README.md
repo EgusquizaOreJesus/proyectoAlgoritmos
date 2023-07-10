@@ -2,7 +2,7 @@
 
 ## Integrantes
 
-| Nombres y Apellidos                     |
+| Nombres y Apellidos          |
 |------------------------------|
 | Fabricio Chávez Balarezo     |
 | Ximena Nicolle Lindo Peña    |
@@ -64,13 +64,14 @@ Se están utilizando cuatro estructuras de datos con el objetivo de almacenar in
 2. **LinkedList:**
    - Indexamos las transacciones con información como el ID, emisor, receptor, monto y fecha.
    - Objetivo: Almacenar la información de la transacción con la indexación de hash.
-
-3. **Btree: <font color="red">(BP Opcional)</font>**
+3. **B - Tree: <font color="red">(BP Opcional)</font>**
    - Indexamos las transacciones por fecha.
    - Utilizado para realizar búsquedas por rango entre fechas A y B.
    - Objetivo: Poder realizar consultas de tipo fecha eficientemente.
-
-4. **Patricia Tree/SufixTree**
+4. **B+ Tree:**
+   - Indexamos montos, para encontrar el máximo y el mínimo.
+   - Objetivo: La transaccion y el bloque donde ha encurrido una operación con un monto máximo o mínimo
+5. **Patricia Tree**
    - Se utiliza para indexar los nombres de los usuarios vinculados en las transacciones.
    - Utilizado para realizar búsquedas rápidas de patrones en una transaccion.
    - Objetivo: Mejorar la eficiencia en la búsqueda de información.
@@ -79,12 +80,12 @@ Se están utilizando cuatro estructuras de datos con el objetivo de almacenar in
 
 En este análisis, nos centramos en los métodos de inserción y búsqueda en el Blockchain. A continuación, se presenta una tabla que muestra la complejidad de cada método:
 
-<font color="red">Modificacion pendiente - BPTree</font>
 | Método                  | Complejidad     | Estructura  |
 |-------------------------|-------------    |-------------|
 | Buscar bloque (id)      | O(1)            | HashTable   |
 | Buscar fecha            | O(log_m(n))     | Btree       |
-| Buscar por rango de fechas | O(log_m(n)+k)| Btree       |
+| Buscar maximo y minimo |  O(log(n))      |  B+ Tree    |
+| Buscar por rango de fechas y monto | O(log_m(n)+k)| Btree       |
 | Insertar Bloque         | O(1)            | HashTable   |
 | Buscar usuario          | O(m)            | SufixTree   |
 | Buscar transacción      | O(m)            | SufixTree   |
@@ -102,9 +103,12 @@ O(log_m(n)), donde "m" representa el numero de keys y "n" representa el número 
 Buscar por rango de fechas :
 - La busqueda por rango de fechas tiene complejidad logarítmica O(log_m(n)+k), en donde "m" representa el número de keys, "n" representa el número de bloques del Blockchain y "k" representa la cantidad de elementos a recorrer.
 
+Buscar maximo y minimo :
+- Se indice respecto al monto, donde "n" representa la cantidad de transacciones. 
+
 Insertar Bloque :
 <font color="red">Modificacion pendiente </font>
-- La inserción de un bloque también tiene una complejidad logarítmica O(log(n)). Al igual que las búsquedas, el tiempo necesario para insertar un bloque aumenta de forma logarítmica a medida que se incrementa el tamaño del Blockchain.
+- La inserción de un bloque también tiene una complejidad logarítmica O(1). Al igual que las búsquedas, el tiempo necesario para insertar un bloque aumenta de forma logarítmica a medida que se incrementa el tamaño del Blockchain.
 
 Buscar usuario y transaccion :
 - Por otro lado, tanto la búsqueda de un usuario como la búsqueda de una transacción tienen una complejidad constante O(m), lo que significa que el tiempo necesario para realizar estas operaciones en un solo blockchain va a ser de complejidad O(m) donde "m" es la cantidad de usuarios involucrados en la transacción, sin embargo, si se busca en todos los bloques, la complejidad es O(m*n), donde "m" es el tamaño promedio de los nombres de usuario y "n" es la cantidad de bloques.
@@ -118,6 +122,7 @@ El análisis de la complejidad en notación Big O nos proporciona una comprensi�
 | Buscar bloque (id)  | O(1)              |Hash         | O(n)        | LinkedList
 | Buscar fecha        | O(log(n))         |BPTree       | O(n*k)      | LinkedList
 | Buscar por rango de fechas| O(log(n)+k) |BPTree       | O(n*m)      | LinkedList
+| Buscar por rango del monto| O(log(n))   |B+ Tree      | O(n)            | LinkedList
 | Insertar bloque     | O(1)              |Hash         | O(n)        | LinkedList
 | Buscar usuario      | O(m)              |SufixTree    | O(n)        | LinkedList
 | Buscar transacción  | O(1)              |SufixTree    | O(n)        | LinkedList
