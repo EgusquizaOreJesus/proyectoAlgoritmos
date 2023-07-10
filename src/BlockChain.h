@@ -206,7 +206,7 @@ public:
             particular_transaction.setIdBloque(id);
             id_last_edited = 1;
             index_on_transaction->insert(particular_transaction);
-            Monto prov;
+            Monto prov{};
             prov.monto=particular_transaction.monto;
             prov.index_bloque=id;
             index_on_monto.insert(prov);
@@ -215,6 +215,56 @@ public:
         }
         auto* new_block= new block(0,data,"");
         block_references.insert(make_pair(new_block->id,new_block));
+    }
+    void insert_transaction(int index,transaccion& data){
+
+        block_references[index]->data2.push_back(data);
+        block_references[index]->re_data();
+        block_references[index]->self_hash_invalido();
+        string current_hash = block_references[index]->current_hash;
+        auto instance_user1 = new Usuario(data.emisor);
+        auto instance_user2 = new Usuario(data.receptor);
+        if(!usuarios.contains(data.emisor))
+        {
+
+            instance_user1->nueva_operacion(index);
+            usuarios.insert(make_pair(instance_user1->getNombre(),instance_user1));
+        }else usuarios[data.emisor]->nueva_operacion(index);
+
+        if(!usuarios.contains(data.receptor))
+        {
+
+            instance_user2->nueva_operacion(index);
+            usuarios.insert(make_pair(instance_user2->getNombre(),instance_user2));
+        }else usuarios[data.receptor]->nueva_operacion(index);
+
+
+        if(usuarios.contains(data.emisor) and usuarios.contains(data.receptor))
+        {
+            usuarios[data.emisor]->increment((-1.0)*data.monto);
+            usuarios[data.receptor]->increment(data.monto);
+        }
+        if (!index_on_names.search(data.emisor)){
+            cout << "hola" << endl;
+            index_on_names.insert(data.emisor);
+        }
+        if (!index_on_names.search(data.receptor)){
+            index_on_names.insert(data.receptor);
+        }
+        data.setIdBloque(index);
+        id_last_edited = 1;
+        index_on_transaction->insert(data);
+        Monto prov{};
+        prov.monto=data.monto;
+        prov.index_bloque=index;
+        index_on_monto.insert(prov);
+        index_on_names.insert(data.emisor);
+        index_on_names.insert(data.receptor);
+        for (int i = index+1; i <= id ; ++i) {
+            block_references[i]->prev_hash = current_hash;
+            block_references[i]->self_hash_invalido();
+            current_hash = block_references[i]->current_hash;
+        }
     }
     void insert_block_with_transaction( vector<transaccion>& data){
         //block * current_block = blockchain_.front();
@@ -443,8 +493,13 @@ public:
 
     static vector<int> get_block_id_from_transaction(const vector<transaccion>& filtrados)
     {  vector<int> ids;
-        for(auto t:filtrados)
-            ids.push_back(t.getIdBloque());
+        for(auto t:filtrados){
+            auto iter = std::find(ids.begin(), ids.end(), t.getIdBloque());
+            if (iter == ids.end()){
+                ids.push_back(t.getIdBloque());
+            }
+
+        }
         return ids;
     }
     static vector<int> get_block_id_from_monto(const vector<Monto>& filtrados)
@@ -462,11 +517,11 @@ public:
         for(auto t:filtros)
         {
             cout<<usuarios[t]->getNombre()<<endl;
-
             for(auto ide:usuarios[t]->getBloqueId())
             {
+                cout<<"ide:"<<ide<<endl;
                 if(!vistos[ide-1])
-                {  cout<<ide<<endl;
+                {  //cout<<ide<<endl;
                     ids.push_back(ide);
                     vistos[ide-1]= true;
                 }

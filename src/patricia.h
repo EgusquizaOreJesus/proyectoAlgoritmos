@@ -37,7 +37,10 @@ public:
         root = new TrieNode();
     }
     void insert( const string& new_word  ) {
+
         int idx= get_index(new_word);
+        cout << idx << endl;
+        cout << "insert block" << endl;
         insert(new_word,0,root->children[idx]);
     }
 
