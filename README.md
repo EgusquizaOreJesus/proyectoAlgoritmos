@@ -14,13 +14,13 @@
 
 En la actualidad, la necesidad de garantizar la seguridad y la integridad de los datos ha impulsado el desarrollo de tecnologías innovadoras en busca de soluciones confiables y eficientes. Entre estas soluciones revolucionarias destaca el Blockchain. Con el paso del tiempo, esta tecnología ha ganado una gran popularidad al ofrecer una forma segura y confiable de almacenar y gestionar datos.
 
-En el marco de este proyecto, nos enfocaremos en la creación de una aplicación transaccional de interacción de datos basada en un Blockchain implementado en un solo host. Para fortalecer la seguridad y mejorar el rendimiento de la aplicación, utilizaremos estructuras de indexación como B-Tree, B+ Tree, Hash y Patricia Tree.
+En este proyecto, nos enfocaremos en la creación de una aplicación transaccional basada en un Blockchain implementado en un solo host. Para fortalecer la seguridad y mejorar el rendimiento de la aplicación, haremos uso de diversas estructuras de indexación, como B-Tree, B+ Tree, Hash y Patricia Tree.
 
-El Blockchain, inicialmente conocido por ser la base de las criptomonedas, ha evolucionado y se ha convertido en una tecnología versátil y confiable para garantizar la integridad de la información. En este proyecto, aprovecharemos su capacidad para almacenar transacciones de manera segura y transparente, combinándola con estructuras de indexación avanzadas como B-Tree, B+ Tree, Hash y Patricia Tree. Esta combinación nos permitirá mejorar la eficiencia y la velocidad de acceso a los datos, brindando una solución robusta y confiable para la gestión de datos transaccionales.
+El Blockchain, inicialmente conocido por ser la base de las criptomonedas, ha evolucionado y se ha convertido en una tecnología versátil y confiable para garantizar la integridad de la información. Aprovecharemos su capacidad para almacenar transacciones de manera segura y transparente, combinándola con estas estructuras de indexación avanzadas. Esta combinación nos permitirá mejorar la eficiencia y velocidad de acceso a los datos, proporcionando una solución robusta y confiable para la gestión de datos transaccionales.
 
 Nuestra aplicación transaccional no solo ofrecerá seguridad y confiabilidad, sino que también permitirá a los usuarios interactuar de manera rápida y segura con los datos.
 
-En resumen, este proyecto busca aprovechar las capacidades del Blockchain y las estructuras de indexación avanzadas para desarrollar una aplicación transaccional de alta calidad. A través de esta solución innovadora, esperamos brindar a los usuarios una experiencia óptima al interactuar con los datos, asegurando su integridad y confiabilidad en todo momento.
+En resumen, este proyecto busca aprovechar las capacidades del Blockchain y diversas estructuras de indexación avanzadas para desarrollar una aplicación transaccional de alta calidad. A través de esta solución innovadora, esperamos brindar a los usuarios una experiencia óptima al interactuar con los datos, asegurando su integridad y confiabilidad en todo momento.
 
 ## Descripción del caso de estudio
 
@@ -28,7 +28,7 @@ En este proyecto, nuestro enfoque principal es desarrollar una aplicación trans
 
 Nuestra aplicación permitirá a los usuarios registrar transacciones de Bitcoin de forma segura, transparente y eficiente. Utilizaremos la tecnología del Blockchain para mantener un historial completo y verificable de todas las operaciones, manteniendo un registro ordenado cronológicamente.
 
-Además, implementaremos estructuras de indexación avanzadas, como el B-Tree, B+ Tree, Hash y Patricia Tree para mejorar el rendimiento y la eficiencia en la búsqueda de transacciones específicas. Esto facilitará a los usuarios encontrar y analizar rápidamente la información relevante de las transacciones de Bitcoin.
+Además, para mejorar el rendimiento y la eficiencia en la búsqueda de transacciones específicas, implementaremos las estructuras de indexación avanzadas mencionadas anteriormente, como el B-Tree, B+ Tree, Hash y Patricia Tree. Esta implementación falicitará a los usuarios encontrar y analizar rápidamente la información relevante de las transacciones de Bitcoin.
 
 En resumen, nuestro caso de estudio se centra en desarrollar una aplicación transaccional basada en Blockchain para la gestión de las transacciones de Bitcoin. Aprovecharemos las ventajas del Blockchain, junto con estructuras de indexación avanzadas, para ofrecer una solución confiable, eficiente y segura en la gestión de operaciones con criptomonedas.
 
@@ -44,11 +44,11 @@ Esta implementación del blockchain en el ámbito financiero nos brinda una plat
 
 El Blockchain, como una estructura de datos descentralizada y distribuida, presenta una cadena de bloques enlazados mediante referencias criptográficas. Cada bloque contiene un conjunto de transacciones y un hash único que identifica al bloque anterior. Esta característica fundamental crea una cadena inmutable, donde cualquier alteración en un bloque afecta a todos los bloques siguientes.
 
-En nuestro caso, hemos implementado una estructura de datos de Blockchain en un solo host, aprovechando las ventajas de las estructuras B-Tree, Hash, Patricia <font color="red"> Tree ó Sufix-Tree (modificar dependiendo de...)</font>. El B-Tree se utiliza para organizar eficientemente las transacciones, permitiendo una búsqueda y recuperación rápidas. Por otro lado, el Hash se emplea para calcular una representación criptográfica única de cada bloque, garantizando así la integridad de su contenido. Adémas, <font color="red"> el Patricia Tree ó Suffix-Tree </font> nos permite obtener una busqueda más eficiente, ya que encuentra todas las ocurrencias de una cadena o patrón específico respecto a la información de las transacciones.
+En nuestro caso, hemos implementado una estructura de datos de Blockchain en un solo host, aprovechando las ventajas de las estructuras B-Tree, B+ Tree Hash, Patricia Tree. Mientras que, el B-Tree se utiliza para organizar eficientemente las transacciones, permitiendo una búsqueda y recuperación rápidas. El B+ Tree nos permite realizar busquedas respecto a los montos y busquedas según intervalos. Por otro lado, el Hash se emplea para calcular una representación criptográfica única de cada bloque, garantizando así la integridad de su contenido. Adémas, el Patricia Tree nos permite obtener una busqueda más eficiente, ya que encuentra todas las ocurrencias de una cadena o patrón específico respecto a la información de las transacciones.
 
 Al emplear estas sólidas estructuras de datos, nuestra aplicación transaccional garantiza la seguridad y la confiabilidad en el registro y la gestión de las transacciones de Bitcoin. La combinación del Blockchain, el B-Tree, el Hash, <font color="red"> Patricia Tree ó Sufix-Tree </font> y el mecanismo de prueba de trabajo crea una solución robusta y resistente a manipulaciones. Asimismo, es importante destacar que existen otros pares en la red que tienen una copia exacta del Blockchain, lo que permite realizar comparaciones y detectar cualquier cambio no autorizado.
 
-En resumen, nuestra aplicación transaccional se basa en una estructura de datos de Blockchain, potenciada por el uso eficiente del B-Tree, el Hash y <font color="red"> Patricia Tree ó Sufix-Tree </font>. Esta combinación garantiza la seguridad y la integridad de las transacciones de Bitcoin, proporcionando un entorno confiable para interactuar con los datos de manera segura y confiable.
+En resumen, nuestra aplicación transaccional se basa en una estructura de datos de Blockchain, potenciada por el uso eficiente del B-Tree, el B+ Tree, el Hash y Patricia Tree. Esta combinación garantiza la seguridad y la integridad de las transacciones de Bitcoin, proporcionando un entorno confiable para interactuar con los datos de manera segura y confiable.
 
 ## Estructuras de datos utilizadas en la aplicación
 
