@@ -1,179 +1,208 @@
 #include <iostream>
 #include "transaccion.h"
 #include "BlockChain.h"
+#include <fstream>
+#include <sstream>
 
-#include "patricia.h"
-#include "boyer.h"
 using namespace std;
 
 
 
 int main() {
-    vector<transaccion> total;
-    transaccion a(100,"jesus","chavez",20,10,2022);
-    transaccion b(200,"chambilla","chavez",21,10,2022);
-    transaccion c(300,"mai","hermes",22,10,2022);
-    transaccion d(400,"miguel","chavez",30,10,2022);
-    transaccion e(500,"pedro","chavez",24,10,2022);
-    transaccion f(150,"chanchumaru","heider",20,10,2022);
-    transaccion g(700,"joaquin","hitlerto",26,10,2022);
-    total.push_back(a);
-    total.push_back(b);
-    total.push_back(c);
+    std::ifstream inFile("../python/transacciones.txt" , std::ios::in);
+    if (!inFile) {
+        std::cerr << "No se pudo abrir el archivo";
+        return 1;
+    }
 
-    total.push_back(e);
-    total.push_back(f);
-    total.push_back(g);
+    double monto;
+    std::string emisor;
+    std::string receptor;
+    int dia, mes, year;
+    std::string linea;
 
-//
+    std::vector<transaccion> Transacciones;
+    std::vector<transaccion> Transacciones_start;
 
-    vector<transaccion> trans2{a,c,f};
-    vector<transaccion> trans3{a,b,c,d};
-    vector<transaccion> trans4{a,b,c,g};
-    vector<transaccion> transM{c,d,e,g,g,g,g,g,g,g};
+    while (inFile >> monto >> emisor  >> receptor  >> dia  >> mes >> year) {
+        transaccion t(monto, emisor, receptor, dia, mes, year);
+        Transacciones.push_back(t);
+    }
 
+    for (int i = 0; i < 5 && i < Transacciones.size(); ++i) {
+        Transacciones_start.push_back(Transacciones[i]);
+    }
 
+    blockchain BLOCK(Transacciones_start);
 
-        blockchain alfa(total);
-        alfa.insert_block_with_transaction(trans2);
-        alfa.insert_block_with_transaction(trans3);
-        alfa.insert_block_with_transaction(trans4);
+    std::vector<transaccion> prov;
+    for (int i = 5; i < Transacciones.size(); ++i) {
+        prov.push_back(Transacciones[i]);
+        if (prov.size() == 5) {
+            BLOCK.insert_block_with_transaction(prov);
+            prov.clear();
+        }
+    }
 
-
-
-
-
-//
-//    cout<<"MAXIMO:"<<alfa.max_value().monto<<endl;
-//    cout<<"MINIMO:"<<alfa.min_value().monto<<endl;
-
-
-//
-////    BPTree<Monto> montos;
-//    for(auto v:total )
-//    {
-//        Monto nuevo;
-//        nuevo.monto=v.monto;
-//        nuevo.index_bloque=1;
-//        montos.insert(nuevo);
-//    }
-//
-//    auto maxi=montos.found_max();
-//    cout<<maxi.monto;
+    if (!prov.empty()) {
+        BLOCK.insert_block_with_transaction(prov);
+    }
 
 
+    while (true) {
+
+        std::cout << "Selecciona una opcion:\n";
+        std::cout << "1. Busqueda por emisor\n";
+        std::cout << "2. Busqueda por receptor\n";
+        std::cout << "3. Busqueda por monto\n";
+        std::cout << "4. Busqueda por monto en un bloque especifico\n";
+        std::cout << "5. Busqueda por rango de monto\n";
+        std::cout << "6. Busqueda por rango de fecha de transaccion\n";
+        std::cout << "7. Busqueda por rango de monto de transaccion\n";
+        std::cout << "8. Busqueda por cadenas que inician con un patron\n";
+        std::cout << "9. Busqueda por contenido en cadena\n";
+        std::cout << "10. Busqueda por el maximo valor\n";
+        std::cout << "11. Busqueda por el minimo valor\n";
+        std::cout << "0. Salir\n";
+
+        int opcion;
+        std::cin >> opcion;
+
+        if (opcion == 0) {
+            break;
+        }
+
+        // Variables para los argumentos de getFiltrados
+        std::string str_data = "";
+        double dbl_data = 0;
+        double ini = 0, end = 0;
+        int index = -1;
+        std::string fecha_ini = "", fecha_end = "";
+
+        switch (opcion) {
+            case 1:  // Búsqueda por emisor
+                std::cout << "Introduce el nombre del emisor: ";
+                std::cin >> str_data;
+                {
+                    auto ids = BLOCK.getFiltrados(CriterioBusqueda::IgualA_X_String_emisor, str_data);
+                    for (int id : ids) {
+                        std::cout << "ID_BLOQUE: " << id << "\n";
+                    }
+                }
+                break;
+
+            case 2:  // Búsqueda por receptor
+                std::cout << "Introduce el nombre del receptor: ";
+                std::cin >> str_data;
+                {
+                    auto ids = BLOCK.getFiltrados(CriterioBusqueda::IgualA_X_String_receptor, str_data);
+                    for (int id : ids) {
+                        std::cout << "ID_BLOQUE: " << id << "\n";
+                    }
+                }
+                break;
+
+            case 3:  // Búsqueda por monto
+                std::cout << "Introduce el monto de la transacción: ";
+                std::cin >> dbl_data;
+                {
+                    auto ids = BLOCK.getFiltrados(CriterioBusqueda::IgualA_X_Double, "", dbl_data);
+                    for (int id : ids) {
+                        std::cout << "ID_BLOQUE: " << id << "\n";
+                    }
+                }
+                break;
+
+            case 4: // Búsqueda por monto en un bloque específico
+                std::cout << "Introduce el monto y el índice del bloque (separado por un espacio): ";
+                std::cin >> dbl_data >> index;
+                {
+                    auto ids = BLOCK.getFiltrados(CriterioBusqueda::IgualA_X_Double_Bloque, "", dbl_data, 0, 0, index);
+                    for (int id : ids) {
+                        std::cout << "ID_BLOQUE: " << id << "\n";
+                    }
+                }
+                break;
+
+            case 5: // Búsqueda por rango de monto
+                std::cout << "Introduce el rango de monto (separado por un espacio): ";
+                std::cin >> ini >> end;
+                {
+                    auto ids = BLOCK.getFiltrados(CriterioBusqueda::RangoMonto, "", 0, ini, end);
+                    for (int id : ids) {
+                        std::cout << "ID_BLOQUE: " << id << "\n";
+                    }
+                }
+                break;
+
+            case 6: // Búsqueda por rango de fecha de transacción
+                std::cout << "Introduce el rango de fechas de transacción (separado por un espacio): ";
+                std::cin >> fecha_ini >> fecha_end;
+                {
+                    auto ids = BLOCK.getFiltrados(CriterioBusqueda::RangoFechaTransaccion, "", 0, 0, 0, -1, fecha_ini, fecha_end);
+                    for (int id : ids) {
+                        std::cout << "ID_BLOQUE: " << id << "\n";
+                    }
+                }
+                break;
+
+            case 7: // Búsqueda por rango de monto de transacción
+                std::cout << "Introduce el rango de montos de transacción (separado por un espacio): ";
+                std::cin >> ini >> end;
+                {
+                    auto ids = BLOCK.getFiltrados(CriterioBusqueda::RangoMontoTransaccion, "", 0, ini, end);
+                    for (int id : ids) {
+                        std::cout << "ID_BLOQUE: " << id << "\n";
+                    }
+                }
+                break;
+
+            case 8: // Búsqueda por cadenas que inician con un patrón
+                std::cout << "Introduce el patrón con el que debe iniciar la cadena: ";
+                std::cin >> str_data;
+                {
+                    auto ids = BLOCK.getFiltrados(CriterioBusqueda::IniciaCon, str_data);
+                    for (int id : ids) {
+                        std::cout << "ID_BLOQUE: " << id << "\n";
+                    }
+                }
+                break;
+
+            case 9: // Búsqueda por contenido en cadena
+                std::cout << "Introduce el contenido a buscar en la cadena: ";
+                std::cin >> str_data;
+                {
+                    auto ids = BLOCK.getFiltrados(CriterioBusqueda::ContenidoEn, str_data);
+                    for (int id : ids) {
+                        std::cout << "IDBLOQUE: " << id << "\n";
+                    }
+                }
+                break;
+
+            case 10: // Búsqueda por el máximo valor
+            {
+                auto ids = BLOCK.getFiltrados(CriterioBusqueda::MaximoValor);
+                for (int id : ids) {
+                    std::cout << "ID_BLOQUE: " << id << "\n";
+                }
+            }
+                break;
+
+            case 11: // Búsqueda por el mínimo valor
+            {
+                auto ids = BLOCK.getFiltrados(CriterioBusqueda::MinimoValor);
+                for (int id : ids) {
+                    std::cout << "ID_BLOQUE: xx" << id << "xx\n";
+                }
+            }
+                break;
+
+            default:
+                std::cout << "Opción no válida. Intenta de nuevo.\n";
+                break;
+        }
+    }
 
 
-
-
-//    block alfa(0,transM,"");
-//    alfa.printblock();
-//    alfa.edit_transaction(4,"Yashajin_Ai",true);
-//    alfa.self_hash_invalido();
-//    alfa.printblock();
-//    alfa.self_hash();
-//    alfa.printblock();
-
-    ////
-//    User_net peers(alfa,4);
-//    alfa.view_blockChain();
-//    peers.view_shared_block();
-//    cout<<"------------------------------USER BLOCK CHAIN ORIGINAL------------------------------"<<endl;
-//        alfa.view_blockChain();
-//    peers.alter_transaction(2,2,1,"Yashajin_Ai",true);
-//    cout<<"------------------------------USER BLOCK CHAIN ALTERED-------------------------------"<<endl;
-//    peers.view_block_chain_by_id(2);
-//    peers.view_codes();
-//    cout<<boolalpha<<peers.is_change_valid(2)<<endl;
-//    cout<<"------------------------------PROOF OF WORK TO ADD BLOCK------------------------------"<<endl;
-//    peers.addBlock(transM);
-//    peers.view_shared_block();
-//    BTree<transaccion> alfa2(3);
-//    alfa2.insert(a);
-//    alfa2.insert(b);
-//    alfa2.insert(c);
-//    alfa2.insert(d);
-//    alfa2.insert(e);
-//    alfa2.insert(f);
-//    alfa2.insert(g);
-//
-////    vector<transaccion> asdf = alfa2.range_searching(100,500)
-////    for(auto a: asdf){
-////        cout << a <<  " ";
-////    }
-//auto v = alfa2.range_searching(100,400);
-//
-//
-//
-//
-//    cout << "tamano: "<< v.size() << endl;
-//    for(const auto& x:v){
-//        cout << "emisor: " <<x.emisor << endl;
-//    }
-
-//    auto v = alfa.search("21/10/2022" ,fechaX);
-//    for(const auto& x:v){
-//        x.display();
-//        cout << endl;
-//    }
-//
-//    string cosa = "{jose{carlos{joaquin{";
-    // Position of suffixes in word
-    // a (5)
-    // na (4)
-    // ana (3)
-    // nana (2)
-    // anana(1)
-    // banana (0)
-//
-//    TriePatricia alfa;
-//    alfa.insert("chambilla");
-//    alfa.insert("chavez");
-//    alfa.insert("miguel");
-//    alfa.insert("jesus");
-//    alfa.insert("joaquin");
-//    alfa.insert("pedro");
-//    alfa.insert("mai");
-//    alfa.insert("hermes");
-//    alfa.insert("loligoth");
-//    alfa.insert("loliyami");
-//    alfa.insert("lolipregnant");
-//    alfa.insert("lolisegs");
-//    alfa.insert("lolicoito");
-//    auto coincidences=alfa.search_start_with("loli");
-//    for(auto palabras :coincidences)
-//        cout<<palabras<<endl;
-
-//   cout<<alfa.toString("-");
-//
-//    string palabras=alfa.toString("-");
-//   vector<int> posi= BoyerMoore(palabras,"ier");
-//   cout<<endl;
-//   cout<<endl;
-//    vector<string> nombres;
-//    for(auto p: posi) {
-//        int start = p;
-//        int end = p;
-//
-//        // Encuentra el inicio de la palabra.
-//        while(start >= 0 && palabras[start] != '-') {
-//            start--;
-//        }
-//
-//        // Encuentra el final de la palabra.
-//        while(end < palabras.size() && palabras[end] != '-') {
-//            end++;
-//        }
-//
-//        // Extrae la palabra completa.
-//        string word = palabras.substr(start+1, end-start-1);
-//        nombres.push_back(word);
-//    }
-//
-//
-//    for(auto v:nombres)
-//   {
-//       cout<<v<<endl;
-//   }
     return 0;
 }

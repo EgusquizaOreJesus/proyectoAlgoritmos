@@ -151,6 +151,21 @@ struct block{
 
 
 };
+enum CriterioBusqueda {
+    IgualA_X_String_emisor = 1,
+    IgualA_X_String_receptor,
+    IgualA_X_Double,
+    IgualA_X_Double_Bloque,
+    RangoMonto,
+    RangoFechaTransaccion,
+    RangoMontoTransaccion,
+    IniciaCon,
+    ContenidoEn,
+    MaximoValor,
+    MinimoValor,
+    // agregar otros criterios según sea necesario...
+};
+
 class blockchain{
 private:
     //ForwardList<block*> blockchain_;
@@ -204,6 +219,7 @@ public:
             index_on_transaction->insert(particular_transaction);
             Monto prov;
             prov.monto=particular_transaction.monto;
+            cout<<"Para este monto -->   ID: "<<id<<"   "<<prov.monto<<endl;
             prov.index_bloque=id;
             index_on_monto.insert(prov);
             index_on_names.insert(particular_transaction.emisor);
@@ -243,8 +259,10 @@ public:
 
            index_on_transaction->insert(particular_transaction);
            Monto prov;
+
            prov.monto=particular_transaction.monto;
-           prov.index_bloque=id;
+            cout<<"Para este monto -->   ID: "<<id+1<<"   "<<prov.monto<<endl;
+           prov.index_bloque=id+1;
            index_on_monto.insert(prov);
            index_on_names.insert(particular_transaction.emisor);
            index_on_names.insert(particular_transaction.receptor);
@@ -330,6 +348,7 @@ public:
 //CRITERIOS DE BUSQUEDA -->Igual a X
     //IGUAL A X Devuelve transacciones que tengan un valor atomico como fecha o nombre de usuario(emisor , receptor)
     vector<transaccion> search(const string& data,eleccion a){
+        cout<<"ENTRO DENTRO"<<endl;
         vector<transaccion> result;
         for (int i = 1; i <= this->block_references.getsize(); ++i) {
             for (const auto& trans: block_references[i]->data2) {
@@ -350,6 +369,10 @@ public:
                     }
                 }
             }
+        }
+        for( const auto& t:result)
+        {   t.getIdBloque();
+
         }
         return result;
 
@@ -421,27 +444,17 @@ public:
     Monto min_value(){
         return index_on_monto.found_min();
     }
-    enum CriterioBusqueda {
-        IgualA_X_String = 1,
-        IgualA_X_Double,
-        IgualA_X_Double_Bloque,
-        RangoMonto,
-        RangoFechaTransaccion,
-        RangoMontoTransaccion,
-        IniciaCon,
-        ContenidoEn,
-        MaximoValor,
-        MinimoValor,
-        // agregar otros criterios según sea necesario...
-    };
 
-    static vector<int> get_block_id_from_transaction(const vector<transaccion>& filtrados)
-    {  vector<int> ids;
-         for(auto t:filtrados)
+  vector<int> get_block_id_from_transaction(const vector<transaccion>& filtrados)
+    {    vector<int> ids;
+        vector<bool> vistos(id, false);
+         for(const auto& t:filtrados)
+         {
              ids.push_back(t.getIdBloque());
+         }
         return ids;
     }
-    static vector<int> get_block_id_from_monto(const vector<Monto>& filtrados)
+    vector<int> get_block_id_from_monto(const vector<Monto>& filtrados)
     {  vector<int> ids;
         for(auto t:filtrados)
             ids.push_back(t.index_bloque);
@@ -452,15 +465,15 @@ public:
     {
         vector<int> ids;
         vector<bool> vistos(id, false);
-        cout<<id<<endl;
+
         for(auto t:filtros)
         {
-            cout<<usuarios[t]->getNombre()<<endl;
+
 
             for(auto ide:usuarios[t]->getBloqueId())
             {
                 if(!vistos[ide-1])
-                {  cout<<ide<<endl;
+                {
                       ids.push_back(ide);
                     vistos[ide-1]= true;
                 }
@@ -473,42 +486,50 @@ public:
         return ids;
     }
 
-    vector<int> getFiltrados(CriterioBusqueda criterio, const string& str_data = "", double dbl_data = 0, eleccion elec = emisor, double ini = 0, double end = 0, int index = -1)  {
+    vector<int> getFiltrados(CriterioBusqueda criterio, const string& str_data = "", double dbl_data = 0,  double ini = 0, double end = 0, int index = -1 , const string& fecha_ini="" , const string&  fecha_end="")  {
         vector<int> ids;  // vector para guardar los ids de los bloques
 
         switch (criterio) {
-            case CriterioBusqueda::IgualA_X_String:
-            {
-                auto result = search(str_data, elec);
+            case CriterioBusqueda::IgualA_X_String_emisor:
+            {  cout<<"LLAMADA :"<<endl;
+                auto result = search(str_data, emisor);
+
+                ids= get_block_id_from_transaction(result);
+            }
+                break;
+            case CriterioBusqueda::IgualA_X_String_receptor:
+            {  cout<<"LLAMADA :"<<endl;
+                auto result = search(str_data, receptor);
+
                 ids= get_block_id_from_transaction(result);
             }
                 break;
             case CriterioBusqueda::IgualA_X_Double:
-            {
+            {   cout<<"LLAMADA double:"<<endl;
                 auto result = search(dbl_data);
                 ids= get_block_id_from_transaction(result);
             }
                 break;
             case CriterioBusqueda::IgualA_X_Double_Bloque:
-            {
+            {  cout<<"LLAMADA double bloque"<<endl;
                 auto result = search(dbl_data, index);
                 ids= get_block_id_from_transaction(result);
             }
                 break;
             case CriterioBusqueda::RangoMonto:
-            {
+            {   cout<<"LLAMADA rango double monto:"<<endl;
                 auto result = monto_range_search_monto(ini, end);
                 ids=get_block_id_from_monto(result);
             }
                 break;
             case CriterioBusqueda::RangoFechaTransaccion:
-            {
-                auto result = transaction_range_search_fecha(str_data, str_data);
+            {    cout<<"LLAMADA rango double monto:"<<endl;
+                auto result = transaction_range_search_fecha(fecha_ini, fecha_end);
                 ids= get_block_id_from_transaction(result);
             }
                 break;
             case CriterioBusqueda::RangoMontoTransaccion:
-            {
+            {    cout<<"LLAMADA rango double monto:"<<endl;
                 auto result = transaction_range_search_monto(ini, end);
                 ids= get_block_id_from_transaction(result);
             }

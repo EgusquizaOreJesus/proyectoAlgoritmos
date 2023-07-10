@@ -7,7 +7,7 @@
 #include <iostream>
 #include "boyer.h"
 using namespace std;
-const unsigned ALPHA_SIZE = 27;
+const unsigned ALPHA_SIZE = 26;
 class TriePatricia {
 private:
     struct TrieNode{
