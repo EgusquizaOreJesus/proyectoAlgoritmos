@@ -970,6 +970,147 @@ void drawOptions4(bool isDrawOption, blockchain& alfa){
     UnloadTexture(image);
 }
 
+void drawOptions5(bool isDraw, blockchain& alfa){
+    const int fontSize = 50;
+    const int inputBoxWidth = 250;
+    const int inputBoxHeight = 50;
+    const int menuOptionsCount = 4;
+    bool enterKeyPressed = false;
+    std::string inputText;
+    int selectedOption = 0;
+    Texture2D image = LoadTexture("../assets/sakura2.png");
+
+    const int menuOptionsCountH = 2;
+    int selectedOptionH = 0;
+    std::string options2[menuOptionsCountH] = {"Maximo", "Minimo" };
+    while (!enterKeyPressed) {
+        if (IsKeyPressed(KEY_LEFT)) {
+            selectedOptionH = (selectedOptionH - 1 + menuOptionsCountH) % menuOptionsCountH;
+        }
+        if (IsKeyPressed(KEY_RIGHT)) {
+            selectedOptionH = (selectedOptionH + 1) % menuOptionsCountH;
+        }
+
+        if (IsKeyPressed(KEY_ENTER)) {
+            if (selectedOptionH == 0){
+                auto temp = alfa.max_value();
+                auto transaccion = alfa.search(temp.monto);
+                if (!transaccion.empty()){
+                    drawTransacciones(transaccion);
+                }
+            }
+            if (selectedOptionH == 1){
+                auto temp = alfa.min_value();
+                auto transaccion = alfa.search(temp.monto);
+                if (!transaccion.empty()){
+                    drawTransacciones(transaccion);
+                }
+            }
+            inputText.clear();
+        }
+        if (IsKeyPressed(KEY_ESCAPE)) {
+            enterKeyPressed = true;
+        }
+        BeginDrawing();
+        ClearBackground(BLACK);
+        DrawText("Blockchain", screenWidth / 2 - MeasureText("Blockchain", 200) / 2, 100, 200, WHITE);
+        DrawTexture(image, 50, (screenHeight - image.height) / 2, WHITE);
+        // Dibuja el recuadro de entrada de texto
+        DrawRectangle(500, 555, 1000, 40,  LIGHTGRAY);
+        DrawText("PLAY", 950, 560, 40, RED);
+        if (selectedOptionH >= 0 && selectedOptionH < menuOptionsCountH) {
+            DrawText("<", screenWidth / 2 - MeasureText(options2[selectedOptionH].c_str(), fontSize) - 100, 500, fontSize, GREEN);
+            DrawText(options2[selectedOptionH].c_str(), screenWidth / 2 - MeasureText(options2[selectedOptionH].c_str(), fontSize) / 2, 500, fontSize, GREEN);
+            DrawText(">", screenWidth / 2 + MeasureText(options2[selectedOptionH].c_str(), fontSize) + 100, 500, fontSize, GREEN);
+        }
+        EndDrawing();
+
+        // Captura la entrada del usuario
+        int key = GetKeyPressed();
+        if ((key >= 32) && (key <= 125)) {
+            inputText.push_back(static_cast<char>(key));
+        }
+
+        if (IsKeyPressed(KEY_BACKSPACE)) {
+            if (!inputText.empty()) {
+                inputText.pop_back();
+            }
+        }
+    }
+    UnloadTexture(image);
+}
+void drawOptions5_index(bool isDraw, blockchain& alfa){
+    const int fontSize = 50;
+    const int inputBoxWidth = 250;
+    const int inputBoxHeight = 50;
+    const int menuOptionsCount = 4;
+    bool enterKeyPressed = false;
+    std::string inputText;
+    int selectedOption = 0;
+    Texture2D image = LoadTexture("../assets/sakura2.png");
+
+    const int menuOptionsCountH = 2;
+    int selectedOptionH = 0;
+    std::string options2[menuOptionsCountH] = {"Maximo", "Minimo" };
+    while (!enterKeyPressed) {
+        if (IsKeyPressed(KEY_LEFT)) {
+            selectedOptionH = (selectedOptionH - 1 + menuOptionsCountH) % menuOptionsCountH;
+        }
+        if (IsKeyPressed(KEY_RIGHT)) {
+            selectedOptionH = (selectedOptionH + 1) % menuOptionsCountH;
+        }
+
+        if (IsKeyPressed(KEY_ENTER)) {
+            if (selectedOptionH == 0){
+                auto temp = alfa.max_value();
+                vector<int> indice;
+                indice.push_back(temp.index_bloque);
+                if (!indice.empty()){
+                    DrawBlocks_index(true,alfa,indice);
+                }
+            }
+            if (selectedOptionH == 1){
+                auto temp = alfa.max_value();
+                vector<int> indice;
+                indice.push_back(temp.index_bloque);
+                if (!indice.empty()){
+                    DrawBlocks_index(true,alfa,indice);
+                }
+            }
+            inputText.clear();
+        }
+        if (IsKeyPressed(KEY_ESCAPE)) {
+            enterKeyPressed = true;
+        }
+        BeginDrawing();
+        ClearBackground(BLACK);
+        DrawText("Blockchain", screenWidth / 2 - MeasureText("Blockchain", 200) / 2, 100, 200, WHITE);
+        DrawTexture(image, 50, (screenHeight - image.height) / 2, WHITE);
+        // Dibuja el recuadro de entrada de texto
+        DrawRectangle(500, 555, 1000, 40,  LIGHTGRAY);
+        DrawText("PLAY", 950, 560, 40, RED);
+        if (selectedOptionH >= 0 && selectedOptionH < menuOptionsCountH) {
+            DrawText("<", screenWidth / 2 - MeasureText(options2[selectedOptionH].c_str(), fontSize) - 100, 500, fontSize, GREEN);
+            DrawText(options2[selectedOptionH].c_str(), screenWidth / 2 - MeasureText(options2[selectedOptionH].c_str(), fontSize) / 2, 500, fontSize, GREEN);
+            DrawText(">", screenWidth / 2 + MeasureText(options2[selectedOptionH].c_str(), fontSize) + 100, 500, fontSize, GREEN);
+        }
+        EndDrawing();
+
+        // Captura la entrada del usuario
+        int key = GetKeyPressed();
+        if ((key >= 32) && (key <= 125)) {
+            inputText.push_back(static_cast<char>(key));
+        }
+
+        if (IsKeyPressed(KEY_BACKSPACE)) {
+            if (!inputText.empty()) {
+                inputText.pop_back();
+            }
+        }
+    }
+    UnloadTexture(image);
+
+}
 enum class CampoActivo
 {
     IndexBloque,
@@ -1477,7 +1618,7 @@ void DrawInsert(blockchain& alfa,bool& shouldExit, bool& shouldMenu){
 void DrawSearch(blockchain& alfa,bool& shouldExit, bool& shouldMenu) {
 
     const int fontSize = 24;
-    const int menuOptionsCount = 4;
+    const int menuOptionsCount = 5;
 
     bool enterKeyPressed = false;
     int selectedOption = 0;
@@ -1539,6 +1680,15 @@ void DrawSearch(blockchain& alfa,bool& shouldExit, bool& shouldMenu) {
                     drawOptions4(true,alfa);
                 }
             }
+            else if (selectedOption == 4){
+                DrawLoading2();
+                if (selectedOptionH == 0){
+                    drawOptions5_index(true,alfa);
+                }
+                else{
+                    drawOptions5(true,alfa);
+                }
+            }
         }
 
         if (IsKeyPressed(KEY_ESCAPE)) {
@@ -1552,7 +1702,7 @@ void DrawSearch(blockchain& alfa,bool& shouldExit, bool& shouldMenu) {
 
         DrawText("Search Options:", screenWidth / 2 - MeasureText("Search Options:", fontSize) / 2, screenHeight / 2 - (menuOptionsCount + 1) * fontSize, fontSize, WHITE);
 
-        std::string options[menuOptionsCount] = { "Search", "Range Search", "Start With", "Contains" };
+        std::string options[menuOptionsCount] = { "Search", "Range Search", "Start With", "Contains","Search MAX-MIN" };
 
         for (int i = 0; i < menuOptionsCount; i++) {
             if (i == selectedOption) {
@@ -1797,7 +1947,25 @@ struct app{
 
         // Redimensionar la imagen a un tamaño más pequeño
         int temp = 0;
+        Music music;
+        bool paused = false;
+        InitAudioDevice();
+
+        music = LoadMusicStream("../sounds/sound2.mp3");
+        // Reproducir la música en bucle
+        Image iconKAWAI = LoadImage("../textures/icon_windowscompress.png");
+        SetWindowIcon(iconKAWAI);
+        SetExitKey(KEY_F8);
         while (!shouldExit) {
+            UpdateMusicStream(music);
+            if (IsKeyPressed(KEY_P))
+            {
+                paused = !paused;
+                if (paused)
+                    PauseMusicStream(music);
+                else
+                    ResumeMusicStream(music);
+            }
 
             if (showMenu) {
                 std::pair<int, bool> menuResult = ShowMenu();
@@ -1851,33 +2019,54 @@ struct app{
                 EndDrawing();
             }
         }
-
+        // Liberar recursos y cerrar la aplicación
+        UnloadMusicStream(music);
         CloseWindow();
     }
 };
 
 
 int main() {
-    vector<transaccion> total;
-    transaccion a(100,"jesus","chavez",20,10,2022);
-    transaccion b(200,"chambilla","chavez",21,10,2022);
-    transaccion c(300,"rodrigo","hermes",22,10,2022);
-    transaccion  d(400,"miguel","chavez",23,10,2022);
-    transaccion e(500,"pedro","chavez",24,10,2022);
-    transaccion f(150,"benjamin","chavez",25,10,2022);
-    transaccion g(700,"joaquin","chavez",26,10,2022);
-    total.push_back(a);
-    vector<transaccion> trans2{c};
-    vector<transaccion> trans3{b,d};
-    vector<transaccion> trans4{e,f};
-    vector<transaccion> transM{c,d,e};
+    std::ifstream inFile("../python/transacciones.txt" , std::ios::in);
+    if (!inFile) {
+        std::cerr << "No se pudo abrir el archivo";
+        return 1;
+    }
 
-    blockchain alfa(total);
-    alfa.insert_block_with_transaction(trans2);
-    alfa.insert_block_with_transaction(trans3);
-    alfa.insert_block_with_transaction(trans4);
+    double monto;
+    std::string emisor;
+    std::string receptor;
+    int dia, mes, year;
+    std::string linea;
 
-    app::runApp(alfa);
+    std::vector<transaccion> Transacciones;
+    std::vector<transaccion> Transacciones_start;
+
+    while (inFile >> monto >> emisor  >> receptor  >> dia  >> mes >> year) {
+        transaccion t(monto, emisor, receptor, dia, mes, year);
+        Transacciones.push_back(t);
+    }
+
+    for (int i = 0; i < 5 && i < Transacciones.size(); ++i) {
+        Transacciones_start.push_back(Transacciones[i]);
+    }
+
+    blockchain BLOCK(Transacciones_start);
+
+    std::vector<transaccion> prov;
+    for (int i = 5; i < Transacciones.size(); ++i) {
+        prov.push_back(Transacciones[i]);
+        if (prov.size() == 5) {
+            BLOCK.insert_block_with_transaction(prov);
+            prov.clear();
+        }
+    }
+
+    if (!prov.empty()) {
+        BLOCK.insert_block_with_transaction(prov);
+    }
+//    BLOCK.view_blockChain();
+    app::runApp(BLOCK);
 
     return 0;
 }

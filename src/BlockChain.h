@@ -29,6 +29,20 @@ int mine( int nonce, const string& data , string challenge)
     return nonce;
 
 }
+enum CriterioBusqueda {
+    IgualA_X_String_emisor = 1,
+    IgualA_X_String_receptor,
+    IgualA_X_Double,
+    IgualA_X_Double_Bloque,
+    RangoMonto,
+    RangoFechaTransaccion,
+    RangoMontoTransaccion,
+    IniciaCon,
+    ContenidoEn,
+    MaximoValor,
+    MinimoValor,
+    // agregar otros criterios según sea necesario...
+};
 struct Monto{
     double monto;
     int index_bloque;
@@ -477,19 +491,6 @@ public:
     Monto min_value(){
         return index_on_monto.found_min();
     }
-    enum CriterioBusqueda {
-        IgualA_X_String = 1,
-        IgualA_X_Double,
-        IgualA_X_Double_Bloque,
-        RangoMonto,
-        RangoFechaTransaccion,
-        RangoMontoTransaccion,
-        IniciaCon,
-        ContenidoEn,
-        MaximoValor,
-        MinimoValor,
-        // agregar otros criterios según sea necesario...
-    };
 
     static vector<int> get_block_id_from_transaction(const vector<transaccion>& filtrados)
     {  vector<int> ids;
@@ -534,42 +535,50 @@ public:
         return ids;
     }
 
-    vector<int> getFiltrados(CriterioBusqueda criterio, const string& str_data = "", double dbl_data = 0, eleccion elec = emisor, double ini = 0, double end = 0, int index = -1)  {
+    vector<int> getFiltrados(CriterioBusqueda criterio, const string& str_data = "", double dbl_data = 0,  double ini = 0, double end = 0, int index = -1 , const string& fecha_ini="" , const string&  fecha_end="")  {
         vector<int> ids;  // vector para guardar los ids de los bloques
 
         switch (criterio) {
-            case CriterioBusqueda::IgualA_X_String:
-            {
-                auto result = search(str_data, elec);
+            case CriterioBusqueda::IgualA_X_String_emisor:
+            {  cout<<"LLAMADA :"<<endl;
+                auto result = search(str_data, emisor);
+
+                ids= get_block_id_from_transaction(result);
+            }
+                break;
+            case CriterioBusqueda::IgualA_X_String_receptor:
+            {  cout<<"LLAMADA :"<<endl;
+                auto result = search(str_data, receptor);
+
                 ids= get_block_id_from_transaction(result);
             }
                 break;
             case CriterioBusqueda::IgualA_X_Double:
-            {
+            {   cout<<"LLAMADA double:"<<endl;
                 auto result = search(dbl_data);
                 ids= get_block_id_from_transaction(result);
             }
                 break;
             case CriterioBusqueda::IgualA_X_Double_Bloque:
-            {
+            {  cout<<"LLAMADA double bloque"<<endl;
                 auto result = search(dbl_data, index);
                 ids= get_block_id_from_transaction(result);
             }
                 break;
             case CriterioBusqueda::RangoMonto:
-            {
+            {   cout<<"LLAMADA rango double monto:"<<endl;
                 auto result = monto_range_search_monto(ini, end);
                 ids=get_block_id_from_monto(result);
             }
                 break;
             case CriterioBusqueda::RangoFechaTransaccion:
-            {
-                auto result = transaction_range_search_fecha(str_data, str_data);
+            {    cout<<"LLAMADA rango double monto:"<<endl;
+                auto result = transaction_range_search_fecha(fecha_ini, fecha_end);
                 ids= get_block_id_from_transaction(result);
             }
                 break;
             case CriterioBusqueda::RangoMontoTransaccion:
-            {
+            {    cout<<"LLAMADA rango double monto:"<<endl;
                 auto result = transaction_range_search_monto(ini, end);
                 ids= get_block_id_from_transaction(result);
             }
